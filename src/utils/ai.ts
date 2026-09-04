@@ -890,6 +890,47 @@ export function catalogAnswer(question: string, products: Product[], categories:
     return `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock > 0 ? `${p.stock} in stock` : 'out of stock'}${desc}`
   }
 
+  /**
+   * When exact filters (grade + price) return 0 results, relax constraints progressively
+   * to show partial matches. Returns a helpful message with alternatives.
+   */
+  const relaxedConstraintsMessage = (subjectLabel: string, allMatched: Product[], gradeLetter?: string, maxPrice?: number): CatalogAnswer => {
+    const inStockAll = inStock(allMatched)
+    const gradeOnly = gradeLetter ? inStockAll.filter((p) => p.grade.toUpperCase() === gradeLetter) : []
+    const priceOnly = maxPrice !== undefined ? inStockAll.filter((p) => p.price <= maxPrice) : []
+
+    const lines: string[] = []
+
+    if (gradeOnly.length > 0 && priceOnly.length > 0) {
+      // Both constraints exist but no overlap
+      lines.push(`We don't have ${subjectLabel} that are BOTH grade ${gradeLetter} and under £${maxPrice}.`)
+      if (gradeOnly.length > 0) {
+        lines.push(`\nGrade ${gradeLetter} ${subjectLabel} (different prices):`)
+        lines.push(...gradeOnly.slice(0, 3).map((p) => `• ${p.name} · £${p.price.toFixed(2)}`))
+        if (gradeOnly.length > 3) lines.push(`…and ${gradeOnly.length - 3} more`)
+      }
+      if (priceOnly.length > 0) {
+        const different = priceOnly.filter((p) => !gradeOnly.includes(p))
+        if (different.length > 0) {
+          lines.push(`\n${subjectLabel} under £${maxPrice} (different grades):`)
+          lines.push(...different.slice(0, 3).map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)}`))
+          if (different.length > 3) lines.push(`…and ${different.length - 3} more`)
+        }
+      }
+      if (gradeOnly.length > 0 && gradeOnly[0]) {
+        const diff = gradeOnly[0].price - (maxPrice ?? 0)
+        lines.push(`\nTip: the cheapest grade ${gradeLetter} ${subjectLabel} is £${gradeOnly[0].price.toFixed(2)} — ${diff > 0 ? `£${diff.toFixed(2)} over budget` : 'within reach with a small stretch'}.`)
+      }
+    } else if (inStockAll.length > 0) {
+      lines.push(`We don't have ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}, but here's what we do have:`)
+      lines.push(...inStockAll.slice(0, 4).map(fmtProduct))
+      if (inStockAll.length > 4) lines.push(`…and ${inStockAll.length - 4} more`)
+    } else {
+      return { message: `We don't have any matching ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock right now.` }
+    }
+    return { message: lines.join('\n') }
+  }
+
   /** Build a smart "not found" message: detect what the user was looking for and suggest alternatives. */
   const smartNotFound = (subjectLabel: string, products: Product[], categories: Category[]): CatalogAnswer => {
     // 1. Try category-based filtering: exact category name or description keyword
@@ -1012,12 +1053,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
     let set = inStock(matched)
     if (gradeLetter) set = set.filter((p) => p.grade.toUpperCase() === gradeLetter)
     if (maxPrice !== undefined) set = set.filter((p) => p.price <= maxPrice)
-    if (set.length === 0) {
-      const constraints = []
-      if (gradeLetter) constraints.push(`grade ${gradeLetter}`)
-      if (maxPrice !== undefined) constraints.push(`under £${maxPrice}`)
-      return { message: `We don't have any matching ${subjectLabel}${constraints.length > 0 ? ' (' + constraints.join(', ') + ')' : ''} right now.` }
-    }
+    if (set.length === 0) return relaxedConstraintsMessage(subjectLabel, matched, gradeLetter, maxPrice)
     const ascending = /cheapest|lowest|affordable|budget|best (deal|price)|least expensive/i.test(q)
     const sorted = ascending ? [...set].sort((a, b) => a.price - b.price) : [...set].sort((a, b) => b.price - a.price)
     const top = sorted.slice(0, 5).map(fmtProduct).join('\n')
@@ -1031,12 +1067,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
     let set = inStock(matched)
     if (gradeLetter) set = set.filter((p) => p.grade.toUpperCase() === gradeLetter)
     if (maxPrice !== undefined) set = set.filter((p) => p.price <= maxPrice)
-    if (set.length === 0) {
-      const constraints = []
-      if (gradeLetter) constraints.push(`grade ${gradeLetter}`)
-      if (maxPrice !== undefined) constraints.push(`under £${maxPrice}`)
-      return { message: `We don't have any matching ${subjectLabel}${constraints.length > 0 ? ' (' + constraints.join(', ') + ')' : ''} right now.` }
-    }
+    if (set.length === 0) return relaxedConstraintsMessage(subjectLabel, matched, gradeLetter, maxPrice)
     const sorted = [...set].sort((a, b) => a.price - b.price)
     const top = sorted.slice(0, 5).map(fmtProduct).join('\n')
     const more = sorted.length > 5 ? `\n…and ${sorted.length - 5} more options` : ''
