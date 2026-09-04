@@ -631,8 +631,9 @@ function cleanSubjectForProducts(subject: string): string {
   const cleaned = subject
     .replace(/cheapest|most expensive|best value|lowest price|highest price|affordable|budget|best (deal|price)|least expensive|lowest|highest|price (low|high|up|down)/gi, '')
     .replace(/recommend|suggest|find me|looking for|give me/gi, '')
-    .replace(/(?:for|that is|is)\s+(?:under|below|less than|up to)\s*(?:£|\$|gbp|usd)?\s*\d+(?:\.\d{1,2})?/gi, '')
-    .replace(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd)?\s*\d+(?:\.\d{1,2})?/gi, '')
+    .replace(/(?:for|that is|is)\s+(?:under|below|less than|up to)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?\s*\d+(?:\.\d{1,2})?\s*(?:£|\$|gbp|usd|pounds?|dollars?)?/gi, '')
+    .replace(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?\s*\d+(?:\.\d{1,2})?\s*(?:£|\$|gbp|usd|pounds?|dollars?)?/gi, '')
+    .replace(/\b\d+(?:\.\d{1,2})?\s*(?:£|\$|gbp|usd|pounds?|dollars?)\b/gi, '')
     .replace(/grade[sd]?\s+[a-f]\b/gi, '')
     .replace(/\b(that|is|it|for|the|a|an|and|or|but|to|of|in|on|at|by|with|from|any|got|some|all|like|just|really|very|also|maybe|perhaps)\b/gi, ' ')
     .replace(/\s{2,}/g, ' ')
@@ -872,7 +873,9 @@ export function catalogAnswer(question: string, products: Product[], categories:
   }
 
   const gradeLetter = (q.match(/grade[sd]?\s+([a-f])\b/i) ?? [])[1]?.toUpperCase()
-  const priceMatch = q.match(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd)?\s*(\d+(?:\.\d{1,2})?)/i)
+  // Match price constraints: "under £400", "under 400 pounds", "under 400", "below $200"
+  const priceMatch = q.match(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?\s*(\d+(?:\.\d{1,2})?)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?/i)
+    ?? q.match(/(\d+(?:\.\d{1,2})?)\s*(?:£|\$|gbp|usd|pounds?|dollars?)\b/i)
   const maxPrice = priceMatch ? parseFloat(priceMatch[1]) : undefined
   const stockIntent = /in stock|available|left\b|on hand|out of stock|currently/.test(q)
 
