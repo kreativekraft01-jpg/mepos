@@ -174,11 +174,19 @@ export function fuseEvidence(e: Evidence): FusionResult {
   // Exception: for policy/procedural questions the KB is the correct source, so
   // don't let a "we don't have 'return policy' in the catalog" fall through and
   // compete with the KB.
+  //
+  // The deterministic score is scaled by catalogAnswer's confidence. High-confidence
+  // answers (clear intent: counts, stock, grade, price, sort) score the full +4 and
+  // short-circuit the LLM. Low-confidence answers (fuzzy subject matches and
+  // "here's what we have instead" fallbacks) score below the 4 threshold, so the
+  // question is routed to the LLM with the catalog as evidence context instead of
+  // being answered by a brittle regex guess.
   if (e.catalog.answer) {
     if (e.kb.isProcedural && e.kb.raw) {
       scores.catalog += 1 // context only — KB wins this case
     } else {
-      scores.catalog += 4
+      const conf = e.catalog.answer.confidence ?? 1
+      scores.catalog += Math.max(1, Math.round(4 * conf))
     }
   } else if (e.catalog.hits.length > 0) {
     scores.catalog += Math.min(e.catalog.hits.length, 2) // context-only, no deterministic answer

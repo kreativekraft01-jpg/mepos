@@ -6,6 +6,14 @@ import { STOPWORDS, tokenize, retrieveKnowledge } from './rag'
 export interface CatalogAnswer {
   message: string
   correctedQuery?: string
+  /**
+   * How deterministic/trustworthy the answer is (0–1), used by the pipeline to
+   * decide whether catalogAnswer won fairly or whether a fuzzy/natural-language
+   * question should be routed to the LLM. High when the intent was clearly
+   * structured (counts, stock, grade, price, sort); low for fuzzy subject matches
+   * and "here's what we have instead" fallbacks.
+   */
+  confidence?: number
 }
 
 /* ── Fuzzy matching utilities ─────────────────────────────────────────────── */
@@ -762,7 +770,8 @@ export function catalogAnswer(question: string, products: Product[], categories:
       const correctedLabel = correctedSubject.replace(/\s+/g, ' ').slice(0, 32).trim()
       return {
         message: `Did you mean "${correctedLabel}"? I found ${correctedResults.length} result${correctedResults.length !== 1 ? 's' : ''} for that.`,
-        correctedQuery: correctedSubject
+        correctedQuery: correctedSubject,
+        confidence: 1
       }
     }
   }
@@ -786,7 +795,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
       const lines = [...byCat.entries()]
         .sort((a, b) => b[1] - a[1])
         .map(([name, count]) => `• ${name} — ${count} product${count !== 1 ? 's' : ''}`)
-      return { message: `Here are the categories we carry (${products.length} products total):\n${lines.join('\n')}\n\nAsk me to "show me [category]" to browse a specific category.` }
+      return { message: `Here are the categories we carry (${products.length} products total):\n${lines.join('\n')}\n\nAsk me to "show me [category]" to browse a specific category.`, confidence: 1 }
     }
   }
   if (!countIntent && !availIntent && !categoryIntent && !recommendIntent && !sortIntent) {
@@ -829,7 +838,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
               .map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock > 0 ? `${p.stock} in stock` : 'out of stock'}`)
               .join('\n')
             const more = catProducts.length > 5 ? `\n…and ${catProducts.length - 5} more` : ''
-            return { message: `Here are our ${cn} (${catProducts.length} products, ${inStock.length} in stock):\n${top}${more}` }
+            return { message: `Here are our ${cn} (${catProducts.length} products, ${inStock.length} in stock):\n${top}${more}`, confidence: 1 }
           }
         }
       }
@@ -847,7 +856,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
           .map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock > 0 ? `${p.stock} in stock` : 'out of stock'}`)
           .join('\n')
         const more = descMatches.length > 5 ? `\n…and ${descMatches.length - 5} more` : ''
-        return { message: `Found ${descMatches.length} product${descMatches.length !== 1 ? 's' : ''} matching "${subject}" (${inStock.length} in stock):\n${top}${more}` }
+        return { message: `Found ${descMatches.length} product${descMatches.length !== 1 ? 's' : ''} matching "${subject}" (${inStock.length} in stock):\n${top}${more}`, confidence: 0.6 }
       }
     }
 
@@ -861,15 +870,15 @@ export function catalogAnswer(question: string, products: Product[], categories:
       }
       if (result.length === 1) {
         const p = result[0]
-        return { message: `Yes — we have the ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)}${p.stock > 0 ? ` · ${p.stock} in stock` : ' · currently out of stock'}.` }
+        return { message: `Yes — we have the ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)}${p.stock > 0 ? ` · ${p.stock} in stock` : ' · currently out of stock'}.`, confidence: 0.5 }
       }
       const top = result
         .slice(0, 4)
         .map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock > 0 ? `${p.stock} in stock` : 'out of stock'}`)
         .join('\n')
-      return { message: `Yes, we have ${result.length} matching "${fbSubjectLabel}":\n${top}${result.length > 4 ? `\n…and ${result.length - 4} more` : ''}` }
+      return { message: `Yes, we have ${result.length} matching "${fbSubjectLabel}":\n${top}${result.length > 4 ? `\n…and ${result.length - 4} more` : ''}`, confidence: 0.5 }
     }
-    return { message: `We don't have anything matching "${subject}" in the catalog.` }
+    return { message: `We don't have anything matching "${subject}" in the catalog.`, confidence: 0.5 }
   }
 
   const gradeLetter = (q.match(/grade[sd]?\s+([a-f])\b/i) ?? [])[1]?.toUpperCase()
@@ -929,9 +938,9 @@ export function catalogAnswer(question: string, products: Product[], categories:
       lines.push(...inStockAll.slice(0, 4).map(fmtProduct))
       if (inStockAll.length > 4) lines.push(`…and ${inStockAll.length - 4} more`)
     } else {
-      return { message: `We don't have any matching ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock right now.` }
+      return { message: `We don't have any matching ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock right now.`, confidence: 0.75 }
     }
-    return { message: lines.join('\n') }
+    return { message: lines.join('\n'), confidence: 0.75 }
   }
 
   /** Build a smart "not found" message: detect what the user was looking for and suggest alternatives. */
@@ -951,7 +960,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
             .map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock > 0 ? `${p.stock} in stock` : 'out of stock'}`)
             .join('\n')
           const more = catProducts.length > 5 ? `\n…and ${catProducts.length - 5} more` : ''
-          return { message: `Here are our ${cn} (${catProducts.length} products, ${inStock.length} in stock):\n${top}${more}` }
+          return { message: `Here are our ${cn} (${catProducts.length} products, ${inStock.length} in stock):\n${top}${more}`, confidence: 1 }
         }
       }
     }
@@ -969,7 +978,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
         .map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock > 0 ? `${p.stock} in stock` : 'out of stock'}`)
         .join('\n')
       const more = descMatches.length > 5 ? `\n…and ${descMatches.length - 5} more` : ''
-      return { message: `Found ${descMatches.length} product${descMatches.length !== 1 ? 's' : ''} matching "${subjectLabel}" (${inStock.length} in stock):\n${top}${more}` }
+      return { message: `Found ${descMatches.length} product${descMatches.length !== 1 ? 's' : ''} matching "${subjectLabel}" (${inStock.length} in stock):\n${top}${more}`, confidence: 0.5 }
     }
     // Check if the user was searching for an actor by looking for "starring" patterns in subject
     const actorWords = subjectWords(subject).filter((w) => !WHOLE_CATALOG.has(singularize(w)))
@@ -992,7 +1001,8 @@ export function catalogAnswer(question: string, products: Product[], categories:
       if (bestMatch && bestMatch.dist <= 3) {
         return {
           message: `We don't have anything matching "${subjectLabel}" in the catalog. Did you mean ${bestMatch.name} (${bestMatch.movie})?`,
-          correctedQuery: `${bestMatch.name} movies`
+          correctedQuery: `${bestMatch.name} movies`,
+          confidence: 0.7
         }
       }
 
@@ -1001,7 +1011,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
       if (uniqueActors.length > 0) {
         const actorList = uniqueActors.slice(0, 8).join(', ')
         const more = uniqueActors.length > 8 ? ` and ${uniqueActors.length - 8} more` : ''
-        return { message: `We don't have "${subjectLabel}" in the catalog. We do have movies with these actors: ${actorList}${more}.` }
+        return { message: `We don't have "${subjectLabel}" in the catalog. We do have movies with these actors: ${actorList}${more}.`, confidence: 0.5 }
       }
     }
 
@@ -1013,10 +1023,10 @@ export function catalogAnswer(question: string, products: Product[], categories:
     })
     if (related.length > 0) {
       const list = related.slice(0, 4).map((p) => `• ${p.name} · £${p.price.toFixed(2)}`).join('\n')
-      return { message: `We don't have "${subjectLabel}" in the catalog. Here's what we do have:\n${list}${related.length > 4 ? `\n…and ${related.length - 4} more` : ''}` }
+      return { message: `We don't have "${subjectLabel}" in the catalog. Here's what we do have:\n${list}${related.length > 4 ? `\n…and ${related.length - 4} more` : ''}`, confidence: 0.5 }
     }
 
-    return { message: `We don't have anything matching "${subjectLabel}" in the catalog.` }
+    return { message: `We don't have anything matching "${subjectLabel}" in the catalog.`, confidence: 0.5 }
   }
 
   if (countIntent) {
@@ -1027,7 +1037,8 @@ export function catalogAnswer(question: string, products: Product[], categories:
       return {
         message: stockIntent
           ? `We have ${inStock(set).length} ${labelFor(set.length, subjectLabel)} graded ${gradeLetter} in stock (out of ${set.length}).`
-          : `We have ${set.length} ${labelFor(set.length, subjectLabel)} graded ${gradeLetter} (${inStock(set).length} in stock).`
+          : `We have ${set.length} ${labelFor(set.length, subjectLabel)} graded ${gradeLetter} (${inStock(set).length} in stock).`,
+        confidence: 1
       }
     }
     if (matched.length === 0) return smartNotFound(subjectLabel, products, categories)
@@ -1041,12 +1052,12 @@ export function catalogAnswer(question: string, products: Product[], categories:
     if (byCat.size > 1) {
       const lines = [`We have ${matched.length} ${labelFor(matched.length, subjectLabel)} (${stockCount} in stock):`]
       for (const [cn, n] of byCat) lines.push(`• ${cn}: ${n}${stockIntent ? ` (${inStock(matched.filter((p) => (catName.get(p.categoryId) ?? 'Other') === cn)).length} in stock)` : ''}`)
-      return { message: lines.join('\n') }
+      return { message: lines.join('\n'), confidence: 1 }
     }
     if (stockIntent) {
-      return { message: `We have ${stockCount} ${labelFor(stockCount, subjectLabel)} in stock right now${matched.length !== stockCount ? ` (out of ${matched.length})` : ''}.` }
+      return { message: `We have ${stockCount} ${labelFor(stockCount, subjectLabel)} in stock right now${matched.length !== stockCount ? ` (out of ${matched.length})` : ''}.`, confidence: 1 }
     }
-    return { message: `We have ${matched.length} ${labelFor(matched.length, subjectLabel)} in the catalog (${stockCount} in stock).` }
+    return { message: `We have ${matched.length} ${labelFor(matched.length, subjectLabel)} in the catalog (${stockCount} in stock).`, confidence: 1 }
   }
 
   if (matched.length === 0) return smartNotFound(subjectLabel, products, categories)
@@ -1062,7 +1073,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
     const top = sorted.slice(0, 5).map(fmtProduct).join('\n')
     const more = sorted.length > 5 ? `\n…and ${sorted.length - 5} more` : ''
     const label = ascending ? 'cheapest' : 'most expensive'
-    return { message: `Here are the ${label} ${subjectLabel}${gradeLetter ? ` (grade ${gradeLetter})` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}:\n${top}${more}` }
+    return { message: `Here are the ${label} ${subjectLabel}${gradeLetter ? ` (grade ${gradeLetter})` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}:\n${top}${more}`, confidence: 1 }
   }
 
   // Recommend / list intent — show matching products with prices
@@ -1080,35 +1091,36 @@ export function catalogAnswer(question: string, products: Product[], categories:
     const intro = constraints.length > 0
       ? `Here are ${subjectLabel} matching your criteria (${constraints.join(', ')}):`
       : `Here are some ${subjectLabel} I'd recommend:`
-    return { message: `${intro}\n${top}${more}` }
+    return { message: `${intro}\n${top}${more}`, confidence: 1 }
   }
 
   if (gradeLetter) {
     const gradeFiltered = matched.filter((p) => p.grade.toUpperCase() === gradeLetter)
     const set = maxPrice !== undefined ? gradeFiltered.filter((p) => p.price <= maxPrice) : gradeFiltered
     const avail = inStock(set).length
-    if (avail > 0) return { message: `Yes — we have ${avail} ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock.` }
+    if (avail > 0) return { message: `Yes — we have ${avail} ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock.`, confidence: 1 }
     return {
       message: set.length > 0
         ? `We carry ${set.length} ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}, but they're currently out of stock.`
-        : `We don't have any ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}.`
+        : `We don't have any ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}.`,
+      confidence: 1
     }
   }
   if (maxPrice !== undefined) {
     const set = inStock(matched).filter((p) => p.price <= maxPrice)
-    if (set.length === 0) return { message: `We don't have any ${subjectLabel} under £${maxPrice} in stock right now.` }
+    if (set.length === 0) return { message: `We don't have any ${subjectLabel} under £${maxPrice} in stock right now.`, confidence: 1 }
     const top = set.slice(0, 4).map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock} in stock`).join('\n')
-    return { message: `We have ${set.length} ${subjectLabel} under £${maxPrice} in stock:\n${top}${set.length > 4 ? `\n…and ${set.length - 4} more` : ''}` }
+    return { message: `We have ${set.length} ${subjectLabel} under £${maxPrice} in stock:\n${top}${set.length > 4 ? `\n…and ${set.length - 4} more` : ''}`, confidence: 1 }
   }
   if (matched.length === 1) {
     const p = matched[0]
-    return { message: `Yes — we have the ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)}${p.stock > 0 ? ` · ${p.stock} in stock` : ' · currently out of stock'}.` }
+    return { message: `Yes — we have the ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)}${p.stock > 0 ? ` · ${p.stock} in stock` : ' · currently out of stock'}.`, confidence: 0.5 }
   }
   const top = matched
     .slice(0, 4)
     .map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)} · ${p.stock > 0 ? `${p.stock} in stock` : 'out of stock'}`)
     .join('\n')
-  return { message: `Yes, we have ${matched.length} matching "${subjectLabel}":\n${top}${matched.length > 4 ? `\n…and ${matched.length - 4} more` : ''}` }
+  return { message: `Yes, we have ${matched.length} matching "${subjectLabel}":\n${top}${matched.length > 4 ? `\n…and ${matched.length - 4} more` : ''}`, confidence: 0.5 }
 }
 
 /**
