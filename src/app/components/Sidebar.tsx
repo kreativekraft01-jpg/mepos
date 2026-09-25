@@ -1,6 +1,7 @@
 import { X, Home, Settings, HelpCircle, LogOut, DollarSign, MessageSquare, BookOpen, Sparkles, Building2, ChevronDown, Sun, Moon, Keyboard } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useAuthStore } from '@/store/authStore';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -264,10 +265,10 @@ export function Sidebar({ isOpen, onClose, currentFloat, onCloseBanking, theme =
                   <span className="text-lg font-semibold font-normal">Close Banking</span>
                 </motion.button>
 
-                <motion.button
+                  <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={onClose}
+                  onClick={() => { onClose(); useAuthStore.getState().logout(); window.location.hash = '#/login'; }}
                   className="w-full flex items-center gap-4 px-4 py-4 bg-card hover:bg-sidebar-accent text-sidebar-foreground rounded-none transition-colors text-left border border-sidebar-border group"
                 >
                   <LogOut className="w-6 h-6 text-muted-foreground group-hover:text-sidebar-foreground" />

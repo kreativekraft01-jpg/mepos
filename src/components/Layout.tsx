@@ -1,5 +1,7 @@
 import { useMemo } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { LogOut } from 'lucide-react'
+import { useAuthStore } from '../store/authStore'
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -101,11 +103,20 @@ export default function Layout() {
           <span>AI Assistant</span>
         </NavLink>
 
-        <div className="sidebar-footer">
-          <span className="dot" />
-          <span className="sf-text">
-            {lowStockCount > 0 ? `${lowStockCount} low-stock item${lowStockCount > 1 ? 's' : ''}` : 'All stock healthy'}
-          </span>
+        <div className="sidebar-footer" style={{ flexDirection: 'column', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="dot" />
+            <span className="sf-text">
+              {lowStockCount > 0 ? `${lowStockCount} low-stock item${lowStockCount > 1 ? 's' : ''}` : 'All stock healthy'}
+            </span>
+          </div>
+          <button
+            className="btn btn-ghost btn-sm"
+            style={{ width: '100%', justifyContent: 'flex-start' }}
+            onClick={() => { useAuthStore.getState().logout(); navigate('/login'); }}
+          >
+            <LogOut size={14} /> Log out ({useAuthStore.getState().username ?? 'admin'})
+          </button>
         </div>
       </aside>
 

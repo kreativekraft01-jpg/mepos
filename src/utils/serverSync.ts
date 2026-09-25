@@ -1,4 +1,5 @@
 import { useStore } from '../store/useStore'
+import { authHeaders } from '../store/authStore'
 
 const API = ((import.meta as unknown as { env: Record<string, string> }).env?.VITE_API_URL as string | undefined) || ''
 const STATE_URL = `${API}/api/state`.replace('//api', '/api')
@@ -8,7 +9,7 @@ let saving = false
 
 export async function loadFromServer(): Promise<boolean> {
   try {
-    const res = await fetch(STATE_URL, { method: 'GET' })
+    const res = await fetch(STATE_URL, { method: 'GET', headers: { ...authHeaders() } })
     if (!res.ok) return false
     const json = await res.json()
     const data = json?.data
@@ -55,7 +56,7 @@ export async function saveToServer() {
     }
     await fetch(STATE_URL, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
       body: JSON.stringify(payload),
     })
   } catch {
@@ -69,8 +70,8 @@ export async function saveToServer() {
 export function initServerSync() {
   if (initialized) return
   initialized = true
-  // Detect if server API exists (Render dynamic mode). If not reachable, stay in local-only mode.
-  fetch(STATE_URL, { method: 'GET' }).then(async (res) => {
+  // Detect if server API exists (Render dynamic mode). If not reachable or 401, stay in local-only mode until login.
+  fetch(STATE_URL, { method: 'GET', headers: { ...authHeaders() } }).then(async (res) => {
     if (!res.ok) return
     const json = await res.json().catch(() => null)
     if (json?.data) await loadFromServer()

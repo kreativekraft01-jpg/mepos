@@ -20,6 +20,15 @@ services:
         # Set this in Render dashboard → Environment → Add DATABASE_URL
         # Free option: Neon (https://neon.tech) free 0.5GB Postgres → paste connection string here
         # Leave empty for local testing — server will use JSON file fallback (ephemeral on free, ok for public testing demo)
+      - key: JWT_SECRET
+        sync: false
+        # Generate: openssl rand -base64 32 — or set any long random string. Used to sign login tokens.
+      - key: ADMIN_USERNAME
+        sync: false
+        # Default: admin — set to your desired login username
+      - key: ADMIN_PASSWORD
+        sync: false
+        # Default: admin123 — set to your desired login password (stored hashed via bcrypt)
       - key: PORT
         value: 10000
     headers:
