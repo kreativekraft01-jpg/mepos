@@ -24,6 +24,7 @@ export function OrderHistory({ orders, unprocessed, onClose, onRestoreTransactio
   const [dateRange, setDateRange] = useState('today');
   const [selectedStaff, setSelectedStaff] = useState('all');
   const [selectedFloat, setSelectedFloat] = useState('all');
+  const [dateSort, setDateSort] = useState<'asc' | 'desc'>('desc');
 
   const staffOptions = useMemo(() => {
     const set = new Set<string>();
@@ -39,12 +40,24 @@ export function OrderHistory({ orders, unprocessed, onClose, onRestoreTransactio
 
   const currentData = useMemo(() => {
     const base = activeTab === 'processed' ? orders : unprocessed;
-    return base.filter(
+    const filtered = base.filter(
       (o) =>
         (selectedStaff === 'all' || o.staff === selectedStaff) &&
         (selectedFloat === 'all' || o.float === selectedFloat)
     );
-  }, [activeTab, orders, unprocessed, selectedStaff, selectedFloat]);
+    const getTime = (t: Transaction) => {
+      if (typeof t.createdAt === 'number') return t.createdAt;
+      const parsed = Date.parse(t.dateTime);
+      if (!Number.isNaN(parsed)) return parsed;
+      const num = parseInt(t.orderNumber.replace(/\D/g, ''), 10);
+      return Number.isNaN(num) ? 0 : num;
+    };
+    return [...filtered].sort((a, b) => {
+      const ta = getTime(a);
+      const tb = getTime(b);
+      return dateSort === 'desc' ? tb - ta : ta - tb;
+    });
+  }, [activeTab, orders, unprocessed, selectedStaff, selectedFloat, dateSort]);
 
   const handleDeleteOrder = (orderNumber: string) => {
     toast.error(`Order ${orderNumber} deleted`, {
@@ -200,7 +213,16 @@ export function OrderHistory({ orders, unprocessed, onClose, onRestoreTransactio
                 <tr>
                   <th className="p-4 text-left text-sm font-medium w-12 text-muted-foreground"></th>
                   <th className="p-4 text-left text-sm font-medium text-muted-foreground">Order #</th>
-                  <th className="p-4 text-left text-sm font-medium text-muted-foreground">Date & Time</th>
+                  <th className="p-4 text-left text-sm font-medium text-muted-foreground">
+                    <button
+                      onClick={() => setDateSort((s) => (s === 'desc' ? 'asc' : 'desc'))}
+                      className="flex items-center gap-1 hover:text-foreground transition-colors"
+                      title={dateSort === 'desc' ? 'Newest first — click to show oldest first' : 'Oldest first — click to show newest first'}
+                    >
+                      Date & Time
+                      {dateSort === 'desc' ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                    </button>
+                  </th>
                   <th className="p-4 text-left text-sm font-medium text-muted-foreground">Staff</th>
                   <th className="p-4 text-left text-sm font-medium text-muted-foreground">Float</th>
                   <th className="p-4 text-left text-sm font-medium text-muted-foreground">Type</th>

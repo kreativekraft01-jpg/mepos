@@ -1,3 +1,4 @@
+import { transactionFigures, todaysTransactions } from '../utils/figures'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { Category, Product, Customer, Sale, Settings, Toast, CartItem, SavedCart, PaymentSplit, KnowledgeDoc, AiSkill, BankingContext, Till, GiftVoucher } from '../types'
@@ -5,7 +6,7 @@ import { uid, tillExpectedCash, formatMoney } from '../utils/format'
 import { seedCategories, seedProducts, seedCustomers, buildSeedSales, seedKnowledge, seedSkills, seedTills } from './seed'
 import { DEFAULT_BROWSER_MODEL, normalizeModelId } from '../utils/browserLlm'
 
-const STORE_VERSION = 14
+export const STORE_VERSION = 16
 
 export const DEFAULT_SETTINGS: Settings = {
   storeName: 'ReCell Electronics',
@@ -97,20 +98,7 @@ function refreshSeed(state: POSState) {
 
 /** Today's sales-floor figures for the MEPoS home page. */
 export function selectTodaysFigures(sales: Sale[]) {
-  const start = new Date()
-  start.setHours(0, 0, 0, 0)
-  const today = sales.filter((s) => s.createdAt >= start.getTime())
-  let total = 0
-  let buys = 0
-  let exchange = 0
-  let refunds = 0
-  for (const s of today) {
-    if (s.kind === 'refund') refunds += Math.abs(s.total)
-    else if (s.kind === 'buy') buys += Math.abs(s.total)
-    else if (s.kind === 'exchange') exchange += s.total
-    else total += s.total
-  }
-  return { sales: total, buys, exchange, refunds }
+  return transactionFigures(todaysTransactions(sales))
 }
 
 export const useStore = create<POSState>()(
@@ -415,10 +403,11 @@ export const useStore = create<POSState>()(
         const kind = allBuy ? 'buy' : anyBuy ? 'exchange' : 'sale'
 
         const owed = Math.max(0, netTotal)
+        const payoutDue = Math.max(0, -netTotal)
         const legs = payments.filter((p) => p.amount > 0)
 
         let voucherId: string | undefined
-        if (owed > 0) {
+        if (owed > 0.005) {
           if (legs.length === 0) {
             get().pushToast('error', 'Choose a payment method')
             return { ok: false, error: 'Choose a payment method' }
@@ -438,14 +427,34 @@ export const useStore = create<POSState>()(
             }
             voucherId = v.id
           }
+        } else if (payoutDue > 0.005) {
+          // We owe the customer — payout
+          if (legs.length === 0) {
+            get().pushToast('error', 'Choose a payout method')
+            return { ok: false, error: 'Choose a payout method' }
+          }
+          const paid = Math.round(legs.reduce((s, p) => s + p.amount, 0) * 100) / 100
+          if (paid < payoutDue - 0.001) {
+            get().pushToast('error', `Payout ${formatMoney(paid, st.settings.currency)} doesn't cover amount owed ${formatMoney(payoutDue, st.settings.currency)}`)
+            return { ok: false, error: 'Payout does not match amount owed' }
+          }
+          const voucherLeg = legs.find((p) => p.method === 'voucher')
+          if (voucherLeg) {
+            const v = st.vouchers.find((x) => x.code === opts?.voucherCode)
+            if (!v || v.balance < voucherLeg.amount - 0.001) {
+              get().pushToast('error', 'Voucher not found or insufficient balance')
+              return { ok: false, error: 'Voucher not found or insufficient balance' }
+            }
+            voucherId = v.id
+          }
         }
 
-        const method = legs.length > 0 ? legs[0].method : 'card'
+        const method = legs.length > 0 ? legs[0].method : netTotal < -0.005 ? 'cash' : 'card'
         const cashTotal = legs.filter((p) => p.method === 'cash').reduce((s, p) => s + p.amount, 0)
-        const cashReceived = cashTotal > 0 ? Math.ceil(cashTotal) : undefined
+        const cashReceived = !payoutDue && cashTotal > 0 ? Math.ceil(cashTotal) : undefined
         const paid = Math.round(legs.reduce((s, p) => s + p.amount, 0) * 100) / 100
         const changeDue =
-          cashReceived != null && paid > owed
+          !payoutDue && cashReceived != null && paid > owed
             ? Math.round((cashReceived - owed) * 100) / 100
             : undefined
 
@@ -637,7 +646,7 @@ export const useStore = create<POSState>()(
         }
       },
       migrate: (persisted: unknown, version) => {
-        if (version < STORE_VERSION) {
+        if ((version as number) < 14) {
           const p = (persisted || {}) as Partial<POSState>
           const old = p.settings as (Settings & { ollamaBaseUrl?: string; ollamaModel?: string }) | undefined
           const { ollamaBaseUrl: _url, ollamaModel: _model, ...rest } = old ?? {}
@@ -657,6 +666,13 @@ export const useStore = create<POSState>()(
             savedCarts: [],
             settings: normalized
           }
+        }
+        if ((version as number) < 16) {
+          const p = (persisted || {}) as Partial<POSState>
+          // Strip removed soundEnabled field — feature deleted
+          const s = p.settings as unknown as Record<string, unknown> | undefined
+          if (s && 'soundEnabled' in s) delete s.soundEnabled
+          return { ...(p as POSState), settings: { ...DEFAULT_SETTINGS, ...(s as unknown as Settings) } } as POSState
         }
         return persisted as POSState
       }

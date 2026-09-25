@@ -134,7 +134,7 @@ const cases: TestCase[] = [
   {
     query: 'recommend me phones for under £200 that is a grade B',
     description: 'Grade B phones under £200: none (Pixel 7 B is £229.99)',
-    expect: (a) => a.includes("don't have") || a.includes('no matching') || a.includes('none'),
+    expect: (a) => a.includes("don't have") || a.includes('no matching') || a.includes('none') || a.includes("don't currently have"),
   },
   {
     query: 'recommend me phones under £300',

@@ -127,6 +127,7 @@ export default function Sales() {
                   <th>Receipt</th>
                   <th>Time</th>
                   <th>Customer</th>
+                  <th>Type</th>
                   <th>Items</th>
                   <th>Payment</th>
                   <th className="num">Total</th>
@@ -139,13 +140,18 @@ export default function Sales() {
                     <td><b>#{s.receiptNo}</b></td>
                     <td>{formatDateTime(s.createdAt)}</td>
                     <td>{customerName(s.customerId)}</td>
+                    <td>
+                      <span className={`badge ${s.kind === 'buy' ? 'badge-purple' : s.kind === 'exchange' ? 'badge-blue' : s.kind === 'refund' ? 'badge-red' : 'badge-green'}`} style={{ textTransform: 'capitalize' }}>
+                        {s.kind}
+                      </span>
+                    </td>
                     <td>{s.items.reduce((n, it) => n + it.qty, 0)}</td>
                     <td>
                       <span className="badge badge-gray">
                         {PAYMENT_ICONS[s.paymentMethod]} {paymentSummary(s)}
                       </span>
                     </td>
-                    <td className="num" style={{ fontWeight: 700 }}>{formatMoney(s.total, cur)}</td>
+                    <td className="num" style={{ fontWeight: 700, color: s.total < 0 ? 'var(--danger)' : undefined }}>{formatMoney(s.total, cur)}</td>
                     <td className="num">
                       <button className="btn-icon btn-ghost btn-sm" onClick={(e) => { e.stopPropagation(); setViewing(s) }}>
                         <Printer size={14} />
@@ -155,10 +161,10 @@ export default function Sales() {
                 ))}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={7}>
+                    <td colSpan={8}>
                       <div className="empty-state">
                         <div className="es-icon"><Receipt size={24} /></div>
-                        <p>No sales in this view yet</p>
+                        <p>No transactions in this view yet — all buy, sell and exchange transactions appear here</p>
                       </div>
                     </td>
                   </tr>

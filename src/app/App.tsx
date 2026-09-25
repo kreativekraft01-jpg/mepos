@@ -1,3 +1,4 @@
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { toast, Toaster } from 'sonner';
 import { motion, AnimatePresence } from 'motion/react';
@@ -89,6 +90,9 @@ function cartItemToTransactionItem(c: CartItem): TransactionItem {
 
 export default function App() {
   const store = useStore();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const handledAssistantRequest = useRef<string | null>(null);
   const { customers, sales, tills, activeTillId, customerId, settings, products, categories } = store;
 
   const activeTill: Till | undefined = tills.find((t) => t.id === activeTillId && t.status === 'open');
@@ -250,6 +254,15 @@ export default function App() {
     }
   };
 
+  useEffect(() => {
+    const item = location.state?.assistantCartItem as TransactionItem | undefined;
+    if (!item || handledAssistantRequest.current === location.key) return;
+    handledAssistantRequest.current = location.key;
+    handleAddToCurrentTransaction(item);
+    toast.success(`Added ${item.boxName} to cart`);
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.key, location.state]);
+
   const handleAddToNewTransaction = (item: TransactionItem) => {
     store.clearCart();
     store.addCartItem(transactionItemToCartItem(item));
@@ -338,20 +351,25 @@ export default function App() {
   const handleListingRefund = (customer: any) => toast.info(`Starting refund for ${toProfile(customer).name}`);
   const handleListingGiftVoucher = (customer: any) => toast.info(`Issuing gift voucher for ${toProfile(customer).name}`);
 
-  // Transaction completion → fresh transaction (as in the reference)
+  // Transaction completion — SELL money IN (bank +), BUY money OUT (bank -)
+  // 419 sell + 389 buy => +30 customer pays us; 419 buy + 389 sell => -30 we pay customer
   const handleTransactionComplete = (payments: PaymentSplit[] = []) => {
     const cart = store.cart;
     if (cart.length > 0) {
       const net = Math.round(cart.reduce((s, c) => s + (c.type === 'buy' ? -1 : 1) * c.price * c.qty, 0) * 100) / 100;
       const owed = Math.max(0, net);
+      const payoutDue = Math.max(0, -net);
       const legs = payments.filter((p) => p.amount > 0);
-      store.checkout(
+      const result = store.checkout(
         legs.length > 0
           ? legs
           : owed > 0
             ? [{ method: 'cash', amount: owed }]
-            : [{ method: 'card', amount: 0 }]
+            : payoutDue > 0
+              ? [{ method: 'cash', amount: payoutDue }]
+              : [{ method: 'card', amount: 0 }]
       );
+      if (!result.ok) return;
     }
     store.clearCart();
     setPendingCartItem(null);
@@ -656,6 +674,7 @@ export default function App() {
       {/* Page Content Routing */}
       {currentPage === 'home' && (
         <HomePage
+          currency={settings.currency}
           branchName={settings.storeName}
           todaysFigures={todaysFigures}
           onNewCustomer={handleNewCustomer}

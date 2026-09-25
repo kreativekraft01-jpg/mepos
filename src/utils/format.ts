@@ -28,12 +28,17 @@ export function paymentSummary(sale: Sale): string {
   return pays.map((p) => paymentLabel(p.method)).join(' + ')
 }
 
-/** Amount of a sale settled in cash (0 when paid by card/UPI/credit; negative for cash refunds). */
+/** Amount of a sale settled in cash (0 when paid by card/UPI/credit; negative for cash refunds/payouts). */
 export function saleCashAmount(sale: Sale): number {
   const cash = salePayments(sale)
     .filter((p) => p.method === 'cash')
     .reduce((sum, p) => sum + p.amount, 0)
-  return sale.kind === 'refund' ? -cash : cash
+  if (sale.kind === 'refund') return -cash
+  if (sale.kind === 'buy') return -cash
+  if (sale.kind === 'exchange' && sale.total < 0) return -cash
+  // For sales with negative total due to buy-heavy mix, cash is also an outflow
+  if (sale.total < 0 && cash > 0) return -cash
+  return cash
 }
 
 export function formatMoney(value: number, currency = '$'): string {

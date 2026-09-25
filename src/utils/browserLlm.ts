@@ -127,23 +127,42 @@ export async function loadBrowserModel(
   return loadPromise
 }
 
+let generationQueue: Promise<unknown> = Promise.resolve()
+
 export async function browserChat(
   rawModelId: string,
   messages: AiMessage[],
-  opts?: { temperature?: number; maxTokens?: number }
+  opts?: { temperature?: number; maxTokens?: number; signal?: AbortSignal; onProgress?: (text: string) => void }
 ): Promise<string> {
-  const modelId = normalizeModelId(rawModelId)
-  const eng = await loadBrowserModel(modelId)
-  const completion = await eng.chat.completions.create({
-    messages: messages as unknown as Parameters<typeof eng.chat.completions.create>[0]['messages'],
-    temperature: opts?.temperature ?? 0.3,
-    max_tokens: opts?.maxTokens ?? 450,
-    stream: false
-  } as never)
-
-  const content = completion.choices?.[0]?.message?.content
-  if (!content) throw new Error('Model returned an empty response')
-  return content.trim()
+  const run = generationQueue.catch(() => {}).then(async () => {
+    if (opts?.signal?.aborted) throw new DOMException('Stopped', 'AbortError')
+    const modelId = normalizeModelId(rawModelId)
+    const eng = await loadBrowserModel(modelId)
+    if (opts?.signal?.aborted) throw new DOMException('Stopped', 'AbortError')
+    const abort = () => { void eng.interruptGenerate() }
+    opts?.signal?.addEventListener('abort', abort, { once: true })
+    try {
+      const chunks = await eng.chat.completions.create({
+        messages,
+        temperature: opts?.temperature ?? 0.3,
+        max_tokens: opts?.maxTokens ?? 450,
+        stream: true
+      })
+      let content = ''
+      for await (const chunk of chunks) {
+        if (opts?.signal?.aborted) throw new DOMException('Stopped', 'AbortError')
+        content += chunk.choices[0]?.delta?.content ?? ''
+        opts?.onProgress?.(content)
+      }
+      if (opts?.signal?.aborted) throw new DOMException('Stopped', 'AbortError')
+      if (!content.trim()) throw new Error('Model returned an empty response')
+      return content.trim()
+    } finally {
+      opts?.signal?.removeEventListener('abort', abort)
+    }
+  })
+  generationQueue = run.catch(() => {})
+  return run
 }
 
 export function resetBrowserModel(): void {

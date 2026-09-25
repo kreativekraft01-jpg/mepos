@@ -35,6 +35,7 @@ export type OrderType = 'sell' | 'buy' | 'exchange' | 'mixed';
 export interface Transaction {
   orderNumber: string;
   dateTime: string;
+  createdAt?: number;
   staff: string;
   float: string;
   orderType: OrderType;

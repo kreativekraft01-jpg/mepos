@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { useEffect, useMemo, useState } from 'react'
 import { Plus, Search, Pencil, Trash2, Tags, ImageIcon } from 'lucide-react'
 import { useStore } from '../store/useStore'
 import { formatMoney } from '../utils/format'
@@ -15,7 +16,9 @@ export default function Products() {
   const pushToast = useStore((s) => s.pushToast)
   const cur = useStore((s) => s.settings.currency)
 
-  const [query, setQuery] = useState('')
+  const [searchParams] = useSearchParams()
+  const [query, setQuery] = useState(searchParams.get('q') ?? '')
+  useEffect(() => setQuery(searchParams.get('q') ?? ''), [searchParams])
   const [catFilter, setCatFilter] = useState('all')
   const [editing, setEditing] = useState<Product | 'new' | null>(null)
   const [deleting, setDeleting] = useState<Product | null>(null)

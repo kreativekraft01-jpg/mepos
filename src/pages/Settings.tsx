@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { Save, RotateCcw, Store, Receipt, Bot, BookOpen, Zap, Plus, Pencil, Trash2, Download, Cpu, CheckCircle2, AlertTriangle, RefreshCw } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { Save, RotateCcw, Store, Receipt, Bot, BookOpen, Zap, Plus, Pencil, Trash2, Download, Cpu, CheckCircle2, AlertTriangle, RefreshCw, HardDrive, Upload } from 'lucide-react'
 import { useStore, DEFAULT_SETTINGS } from '../store/useStore'
-import { useBrowserAi } from '../store/browserAi'
+import { useBrowserAi, isModelCached } from '../store/browserAi'
 import { BROWSER_MODELS, browserModelLabel, isWebGpuSupported, normalizeModelId } from '../utils/browserLlm'
 import { formatDate } from '../utils/format'
 import { parseSkill } from '../utils/skills'
+import { downloadBackup, restoreFromFile } from '../utils/backup'
 import type { KnowledgeDoc, AiSkill } from '../types'
 import Modal from '../components/Modal'
 import ConfirmDialog from '../components/ConfirmDialog'
@@ -114,6 +115,32 @@ export default function SettingsPage() {
 
       <div className="card">
         <div className="card-header">
+          <HardDrive size={18} style={{ color: 'var(--primary)' }} />
+          <h3>Backup &amp; Restore</h3>
+        </div>
+        <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: 13.5 }}>Backup current store</div>
+              <div style={{ fontSize: 12.5, color: 'var(--text-faint)' }}>Download a JSON snapshot (products, customers, sales, knowledge base, skills, tills, settings). Keep it safe for future restore.</div>
+            </div>
+            <button className="btn btn-primary" onClick={() => { downloadBackup(); pushToast('success', 'Backup downloaded — keep this file safe') }}>
+              <Download size={15} /> Download backup
+            </button>
+          </div>
+          <div style={{ height: 1, background: 'var(--border)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+            <div>
+              <div style={{ fontWeight: 600, fontSize: 13.5 }}>Restore from backup</div>
+              <div style={{ fontSize: 12.5, color: 'var(--text-faint)' }}>Upload a previously downloaded backup JSON. This will replace current products, knowledge base and settings.</div>
+            </div>
+            <RestoreBackupButton />
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-header">
           <Receipt size={18} style={{ color: 'var(--warning)' }} />
           <h3>Danger zone</h3>
         </div>
@@ -194,10 +221,14 @@ function BrowserAICard({
   const modelId = form.browserModel
   const selected = BROWSER_MODELS.find((m) => m.id === modelId) ?? BROWSER_MODELS[2]
   const isLoadedModel = ai.modelId === modelId
+  const cached = isModelCached(modelId, ai.downloadedModels)
 
   const download = () => {
+    updateSettings({ browserModel: normalizeModelId(modelId) })
     ai.startLoad(modelId)
-    pushToast('info', `Starting ${browserModelLabel(modelId)} download — keep this tab open`)
+    pushToast('info', cached
+      ? `Loading ${browserModelLabel(modelId)} from cache — this stays fast once it's been downloaded`
+      : `First-time download of ${browserModelLabel(modelId)} started — keep this tab open`)
   }
 
   return (
@@ -257,19 +288,22 @@ function BrowserAICard({
 
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-soft)', marginBottom: 8 }}>
-            Model — pick one to download (first time only)
+            Model — pick one to run (first time downloads it, afterwards it loads from cache)
           </div>
           <div className="category-chips" style={{ gap: 8 }}>
             {BROWSER_MODELS.map((m) => (
               <button
                 key={m.id}
                 className={`chip ${modelId === m.id ? 'active' : ''}`}
-                onClick={() => set('browserModel', m.id)}
-                title={`${m.note} · download ${m.size} · needs ${m.memory} memory`}
+                onClick={() => {
+                  set('browserModel', m.id)
+                  updateSettings({ browserModel: m.id })
+                }}
+                title={`${m.note} · ${isModelCached(m.id, ai.downloadedModels) ? 'cached — loads from cache' : `download ${m.size}`} · needs ${m.memory} memory`}
               >
                 <span className="chip-dot" style={{ background: m.light ? 'var(--success)' : 'var(--info)' }} />
                 {m.label}
-                <span style={{ opacity: 0.75 }}>· {m.size}</span>
+                <span style={{ opacity: 0.75 }}>· {m.size}{isModelCached(m.id, ai.downloadedModels) ? ' · cached' : ''}</span>
               </button>
             ))}
           </div>
@@ -290,11 +324,18 @@ function BrowserAICard({
               ? 'Model ready'
               : ai.status === 'loading'
                 ? `Loading… ${ai.progress}%`
-                : `Download & run ${selected?.label}`}
+                : cached
+                  ? `Load from cache & run ${selected?.label}`
+                  : `Download & run ${selected?.label}`}
           </button>
           {ai.status === 'ready' && isLoadedModel && (
             <span style={{ fontSize: 12.5, color: 'var(--success)' }}>
               {selected?.label} ready · answers use the knowledge base on-device
+            </span>
+          )}
+          {cached && ai.status !== 'ready' && (
+            <span style={{ fontSize: 12.5, color: 'var(--text-faint)' }}>
+              Already downloaded in this browser — loads from cache, not re-downloaded.
             </span>
           )}
         </div>
@@ -367,7 +408,7 @@ function KnowledgeBaseCard({
     <div className="card">
       <div className="card-header">
         <BookOpen size={18} style={{ color: 'var(--primary)' }} />
-        <h3>Knowledge base — train the AI</h3>
+        <h3>Knowledge base — guide AI replies</h3>
       </div>
       <div className="card-body">
         <label className="switch" style={{ marginBottom: 14 }}>
@@ -384,7 +425,7 @@ function KnowledgeBaseCard({
           <span>Use the knowledge base when answering</span>
         </label>
         <p style={{ fontSize: 12.5, color: 'var(--text-faint)', marginBottom: 16 }}>
-          Write your own docs — store policies, menu items, procedures, FAQs. The assistant retrieves the most relevant parts of these for every question, on-device. Nothing is sent anywhere.
+          Add store policies, procedures and FAQs. Ask Agent X about your saved documents. It retrieves relevant content locally and uses it to answer with sources. Changes apply to new replies immediately. Store data stays on this device.
         </p>
 
         <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
@@ -414,10 +455,10 @@ function KnowledgeBaseCard({
                   {d.content.split(/\s+/).filter(Boolean).length} words · updated {formatDate(d.updatedAt)}
                 </div>
               </div>
-              <button className="btn-icon btn-ghost" onClick={() => onEdit(d)}>
+              <button className="btn-icon btn-ghost" onClick={() => onEdit(d)} aria-label={`Edit ${d.title}`}>
                 <Pencil size={15} />
               </button>
-              <button className="btn-icon btn-ghost" style={{ color: 'var(--danger)' }} onClick={() => onDelete(d)}>
+              <button className="btn-icon btn-ghost" style={{ color: 'var(--danger)' }} onClick={() => onDelete(d)} aria-label={`Delete ${d.title}`}>
                 <Trash2 size={15} />
               </button>
             </div>
@@ -425,7 +466,7 @@ function KnowledgeBaseCard({
         </div>
         {knowledge.length > 0 && (
           <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text-faint)' }}>
-            {knowledge.length} documents · {totalWords.toLocaleString()} words in training data
+            {knowledge.length} documents · {totalWords.toLocaleString()} words available to the assistant
           </div>
         )}
       </div>
@@ -444,12 +485,10 @@ function DocModal({ doc, onClose }: { doc: KnowledgeDoc | null; onClose: () => v
 
   const save = () => {
     if (!title.trim()) return setError('Give the document a title')
-    if (content.trim().split(/\s+/).filter(Boolean).length < 10) {
-      return setError('Add a bit more content — at least ~10 words so retrieval works well')
-    }
+    if (!content.trim()) return setError('Add the facts or instructions the assistant should use')
     if (doc) {
       updateKnowledgeDoc(doc.id, { title: title.trim(), content: content.trim() })
-      pushToast('success', 'Document updated — AI retrains instantly')
+      pushToast('success', 'Document updated — available to new replies immediately')
     } else {
       addKnowledgeDoc(title.trim(), content.trim())
       pushToast('success', 'Document added to the knowledge base')
@@ -476,12 +515,13 @@ function DocModal({ doc, onClose }: { doc: KnowledgeDoc | null; onClose: () => v
         </div>
       )}
       <div className="field">
-        <label>Title <span className="req">*</span></label>
-        <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Store policies" autoFocus />
+        <label htmlFor="knowledge-title">Title <span className="req">*</span></label>
+        <input id="knowledge-title" className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Store policies" autoFocus />
       </div>
       <div className="field">
-        <label>Content <span className="req">*</span></label>
+        <label htmlFor="knowledge-content">Content <span className="req">*</span></label>
         <textarea
+          id="knowledge-content"
           className="textarea"
           style={{ minHeight: 220 }}
           value={content}
@@ -602,6 +642,45 @@ function SkillsCard({
         )}
       </div>
     </div>
+  )
+}
+
+function RestoreBackupButton() {
+  const pushToast = useStore((s) => s.pushToast)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [confirmFile, setConfirmFile] = useState<File | null>(null)
+  const onPick = () => inputRef.current?.click()
+  const onFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0]
+    if (f) setConfirmFile(f)
+    e.target.value = ''
+  }
+  const doRestore = async () => {
+    if (!confirmFile) return
+    const res = await restoreFromFile(confirmFile)
+    if (res.ok) {
+      pushToast('success', 'Backup restored — reload to see all changes')
+      setConfirmFile(null)
+    } else {
+      pushToast('error', res.error ?? 'Restore failed')
+      setConfirmFile(null)
+    }
+  }
+  return (
+    <>
+      <input ref={inputRef} type="file" accept="application/json,.json" style={{ display: 'none' }} onChange={onFile} />
+      <button className="btn btn-ghost" onClick={onPick}>
+        <Upload size={15} /> Upload backup
+      </button>
+      <ConfirmDialog
+        open={!!confirmFile}
+        title="Restore backup?"
+        message={`Restore "${confirmFile?.name}"? This will overwrite current products, customers, knowledge base and settings. This cannot be undone — consider downloading a fresh backup first.`}
+        confirmLabel="Restore"
+        onCancel={() => setConfirmFile(null)}
+        onConfirm={doRestore}
+      />
+    </>
   )
 }
 

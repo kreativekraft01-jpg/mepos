@@ -18,6 +18,7 @@ import { useState, useEffect } from 'react';
 
 interface HomePageProps {
   branchName: string;
+  currency: string;
   todaysFigures: {
     sales: number;
     buys: number;
@@ -38,6 +39,7 @@ interface HomePageProps {
 }
 
 export function HomePage({
+  currency,
   branchName,
   todaysFigures,
   onNewCustomer,
@@ -344,7 +346,7 @@ export function HomePage({
                  >
                    <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-wider">{stat.label}</div>
                    <div className={`text-2xl font-light tracking-tight ${stat.color}`}>
-                     £{stat.value.toFixed(2)}
+                     {currency}{stat.value.toFixed(2)}
                    </div>
                  </motion.div>
                ))}

@@ -118,6 +118,7 @@ export function saleToTransaction(s: Sale, customerName: string, till?: Till): T
   return {
     orderNumber: s.receiptNo,
     dateTime: formatDateTime(s.createdAt),
+    createdAt: s.createdAt,
     staff: staffLabel(till),
     float: tillLabel(till),
     orderType: (s.kind === 'refund' ? 'sell' : s.kind) as OrderType,
@@ -136,9 +137,11 @@ export function cartToTransaction(
   const types = new Set(items.map((i) => i.type))
   const orderType: OrderType = types.size > 1 ? 'mixed' : (items[0]?.type ?? 'sell')
   const net = items.reduce((sum, i) => sum + (i.type === 'buy' ? -1 : 1) * i.price * i.qty, 0)
+  const ts = opts.createdAt ?? Date.now()
   return {
     orderNumber: opts.orderNumber ?? 'DRAFT',
-    dateTime: formatDateTime(opts.createdAt ?? Date.now()),
+    dateTime: formatDateTime(ts),
+    createdAt: ts,
     staff: staffLabel(opts.till),
     float: tillLabel(opts.till),
     orderType,

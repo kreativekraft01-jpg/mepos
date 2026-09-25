@@ -125,17 +125,20 @@ export function PaymentDue({
     }
   }, [isSuccess]);
 
-  // Calculate totals
+  // Calculate totals — handle both PAY (customer → us) and PAYOUT (us → customer)
+  const isPayout = total < -0.005;
+  const absTotal = Math.abs(total);
+  const payoutDue = isPayout ? absTotal : 0;
+  const effectiveTotal = isPayout ? absTotal : Math.max(0, total);
   const totalPaid = selectedMethods.reduce((sum, method) => {
     const amount = parseFloat(paymentAmounts[method] || '0');
     return sum + amount;
   }, 0);
   
-  const remaining = Math.max(0, total - totalPaid);
-  const change = totalPaid > total ? totalPaid - total : 0;
-  // Allow completing if total is covered OR if it's a negative transaction (store owes customer)
-  // For now assuming positive total implies customer pays
-  const isFullyPaid = totalPaid >= total;
+  const remaining = isPayout ? Math.max(0, payoutDue - totalPaid) : Math.max(0, total - totalPaid);
+  const change = !isPayout && totalPaid > total ? totalPaid - total : 0;
+  // For payout, customer is owed money — we must cover payoutDue; for sale, customer must cover total; balanced (0) is always payable
+  const isFullyPaid = isPayout ? totalPaid >= payoutDue - 0.001 : total === 0 ? true : totalPaid >= total - 0.001;
   
   const amountOf = (m: PaymentMethod) => parseFloat(paymentAmounts[m] || '0') || 0;
 
@@ -164,7 +167,7 @@ export function PaymentDue({
 
     // Auto-allocate the remaining amount to the newly added method
     const currentTotal = Object.values(paymentAmounts).reduce((sum, amt) => sum + parseFloat(amt || '0'), 0);
-    const remainingAmount = Math.max(0, total - currentTotal);
+    const remainingAmount = Math.max(0, effectiveTotal - currentTotal);
 
     setSelectedMethods([...selectedMethods, method]);
     setPaymentAmounts({
@@ -185,7 +188,7 @@ export function PaymentDue({
 
     const next = Math.max(0, raw);
     const others = selectedMethods.filter((m) => m !== method);
-    const maxTotal = Math.max(0, total);
+    const maxTotal = effectiveTotal;
     if (others.length === 0) {
       setPaymentAmounts({ ...paymentAmounts, [method]: value });
       return;
@@ -202,7 +205,7 @@ export function PaymentDue({
   };
 
   const handleCompleteTransaction = () => {
-    if (!isFullyPaid && total > 0) return;
+    if (!isFullyPaid) return;
     
     // Trigger Success Animation
     setIsSuccess(true);
@@ -222,7 +225,7 @@ export function PaymentDue({
     // Delay closing to show animation
     setTimeout(() => {
       setIsSuccess(false); // Reset for next time
-      const maxTotal = Math.max(0, total);
+      const maxTotal = effectiveTotal;
       const payments = selectedMethods.map((m) => ({
         method: m as PaymentMethod,
         amount: Math.round(Math.min(amountOf(m), maxTotal) * 100) / 100,
@@ -453,7 +456,7 @@ export function PaymentDue({
                                   if (!Number.isFinite(n)) {
                                     handleAmountChange(method, '0');
                                   } else {
-                                    handleAmountChange(method, Math.min(n, Math.max(0, total)).toFixed(2));
+                                    handleAmountChange(method, Math.min(n, effectiveTotal).toFixed(2));
                                   }
                                 }}
                                 className="w-20 bg-transparent text-center font-semibold text-[#F1F5F9] focus:outline-none placeholder:text-neutral-700 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none disabled:opacity-50"
@@ -557,18 +560,18 @@ export function PaymentDue({
                   {/* Total/Balance Details */}
                   <div className="flex-1 bg-card p-4 flex flex-col justify-center gap-2 min-w-0">
                     <div className="flex items-baseline justify-between gap-2">
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex-shrink-0">Total</span>
-                      <span className="text-lg font-bold text-foreground tabular-nums">£{total.toFixed(2)}</span>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex-shrink-0">{isPayout ? 'Payout' : 'Total'}</span>
+                      <span className="text-lg font-bold text-foreground tabular-nums">£{(isPayout ? absTotal : total).toFixed(2)}</span>
                     </div>
                     {totalPaid > 0 && (
                       <div className="flex items-baseline justify-between gap-2 opacity-60">
-                        <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex-shrink-0">Paid</span>
+                        <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest flex-shrink-0">{isPayout ? 'We Pay' : 'Paid'}</span>
                         <span className="text-xs font-bold text-muted-foreground tabular-nums">£{totalPaid.toFixed(2)}</span>
                       </div>
                     )}
                     <div className="flex items-baseline justify-between gap-2">
                       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest flex-shrink-0">
-                        {remaining > 0 ? 'To Pay' : change > 0 ? 'Change' : 'Balance'}
+                        {remaining > 0 ? (isPayout ? 'To Pay Customer' : 'To Pay') : change > 0 ? 'Change' : 'Balance'}
                       </span>
                       <span className={`text-2xl font-bold tabular-nums ${
                         remaining > 0 ? 'text-primary' : change > 0 ? 'text-[#34D399]' : 'text-[#34D399]'
@@ -580,12 +583,12 @@ export function PaymentDue({
 
                   {/* Action Button */}
                   <button
-                    disabled={(!isFullyPaid && total > 0) || isSuccess}
+                    disabled={!isFullyPaid || isSuccess}
                     onClick={handleCompleteTransaction}
                     className="flex-[1.2] bg-primary hover:brightness-110 disabled:bg-muted disabled:text-muted-foreground text-primary-foreground font-bold uppercase tracking-wider text-lg transition-all active:scale-[0.99] flex flex-col items-center justify-center gap-2 leading-none disabled:shadow-none border-l-2 border-primary-foreground/10"
                   >
-                    <span className="text-xl">Process</span>
-                    {!(!isFullyPaid && total > 0) && !isSuccess && (
+                    <span className="text-xl">{isPayout ? 'Pay Out' : 'Process'}</span>
+                    {isFullyPaid && !isSuccess && (
                       <kbd className="px-2.5 py-1 bg-black/20 border border-primary-foreground/20 text-xs font-mono text-primary-foreground font-semibold shadow-sm">
                         Enter
                       </kbd>

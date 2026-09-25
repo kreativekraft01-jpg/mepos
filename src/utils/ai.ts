@@ -1,6 +1,8 @@
+import { normalizeInventoryQuery } from './inventoryLanguage'
+import { transactionFigures, todaysTransactions } from './figures'
 import type { Settings, Product, Sale, Customer, Category, KnowledgeDoc } from '../types'
 import { formatDateTime } from './format'
-import { STOPWORDS, tokenize, retrieveKnowledge } from './rag'
+import { STOPWORDS, tokenize, retrieveKnowledge, kbStronglyMatches } from './rag'
 
 /** Result returned by catalogAnswer — includes an optional correctedQuery when a typo is detected. */
 export interface CatalogAnswer {
@@ -145,7 +147,7 @@ function detectTypo(subject: string, products: Product[], categories: Category[]
   const newWords = [...words]
   for (let i = 0; i < words.length; i++) {
     const w = words[i]
-    if (w.length < 3 || STOPWORDS.has(w)) continue
+    if (w.length < 3 || STOPWORDS.has(w) || INTENT_STOPWORDS.has(w)) continue
     // Skip pure numbers — they're prices/quantities, not typos
     if (/^\d+$/.test(w)) continue
 
@@ -188,6 +190,9 @@ function detectTypo(subject: string, products: Product[], categories: Category[]
 export interface AiMessage {
   role: 'system' | 'user' | 'assistant'
   content: string
+  resolvedQuery?: string
+  products?: ProductHit[]
+  sources?: { title: string; text: string }[]
 }
 
 export interface StoreSnapshot {
@@ -198,6 +203,7 @@ export interface StoreSnapshot {
   catalog: { name: string; grade: string; stock: number }[]
   lowStock: { name: string; stock: number }[]
   todaySalesCount: number
+  todayFigures?: ReturnType<typeof transactionFigures>
   todayRevenue: number
   totalSalesCount: number
   totalRevenue: number
@@ -433,11 +439,11 @@ export function buildSnapshot(
   customers: Customer[],
   settings: Settings
 ): StoreSnapshot {
-  const todayStart = new Date()
-  todayStart.setHours(0, 0, 0, 0)
-  const today = sales.filter((s) => s.createdAt >= todayStart.getTime())
+  const today = todaysTransactions(sales)
+  const figures = transactionFigures(today)
+  const all = transactionFigures(sales)
   const itemCounts = new Map<string, number>()
-  for (const s of sales) for (const it of s.items) itemCounts.set(it.productId, (itemCounts.get(it.productId) ?? 0) + it.qty)
+  for (const s of sales.filter(s => s.kind === 'sale')) for (const it of s.items) itemCounts.set(it.productId, (itemCounts.get(it.productId) ?? 0) + it.qty)
   const topId = [...itemCounts.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
 
   return {
@@ -450,10 +456,11 @@ export function buildSnapshot(
       .filter((p) => p.stock <= p.lowStockThreshold)
       .map((p) => ({ name: p.name, stock: p.stock }))
       .sort((a, b) => a.stock - b.stock),
-    todaySalesCount: today.length,
-    todayRevenue: today.reduce((s, x) => s + x.total, 0),
-    totalSalesCount: sales.length,
-    totalRevenue: sales.reduce((s, x) => s + x.total, 0),
+    todayFigures: figures,
+    todaySalesCount: figures.orders,
+    todayRevenue: figures.sales,
+    totalSalesCount: all.orders,
+    totalRevenue: all.sales,
     topProduct: topId ? products.find((p) => p.id === topId)?.name : undefined,
     customerCount: customers.length,
     creditOutstanding: customers.reduce((s, c) => s + c.balance, 0)
@@ -513,7 +520,7 @@ function fmt(n: number, cur: string): string {
 
 /** Words that signal the current question refers back to the previous question's topic. */
 const FOLLOWUP_KEYWORDS =
-  /grade|graded|prices?|costs?|counts?|stock|left|available|how many|how much|what about|how about|them|those|these|they|that\b|the same|their|its|any\b|each\b|ones?\b|in total|altogether|of those|of them|which ones?|are graded|are in|we have|you have|we got|you got|we carry|you carry|which\b|any\b|got\b/i
+  /under|below|cheapest|where|last buys|last sales|latest|quantity|grade|graded|prices?|costs?|counts?|stock|left|available|how many|how much|what about|how about|them|those|these|they|that\b|the same|their|its|any\b|each\b|ones?\b|in total|altogether|of those|of them|which ones?|are graded|are in|we have|you have|we got|you got|we carry|you carry|which\b|any\b|got\b/i
 
 const SUBJECT_LEAD =
   /^(how many|how much|what about|what is|what are|what's|whats|which|what|do we have|do you have|are there|is there|we have|you have|can you|tell me|give me|show me|recommend me|looking for|find me|recommend|suggest|list|count|number of|any|got|u have|ya got|do ya have|any idea|you got)\s+/i
@@ -554,12 +561,16 @@ const REFERENTIAL = /\b(that|this|these|those|they|them|their|it|its|the same|of
  * question and should NOT be rewritten as a follow-up of the previous turn.
  */
 function hasOwnSubject(q: string, catalogNames: string[]): boolean {
+  if (/^(?:(?:how many|how much|quantity|price|prices|where is it|where are they|last buys|last sales|latest buys|latest sales)(?:\s+(?:left|in stock|each|please))?|(?:got|need|have you got)\s+\d+|(?:any\s+)?cheapest|(?:only\s+)?grade\s+[a-f](?:\s+only)?|(?:under|below)\s*[£$€]?\d+(?:\.\d+)?)\s*[?.!]*$/i.test(q)) return false
   const remainder = q
     .replace(/[?.!]+$/g, '')
     .replace(SUBJECT_LEAD, '')
     .replace(SUBJECT_TAIL, '')
     .trim()
+  if (/\b(phones?|smartphones?|laptops?|tablets?|headphones?|cameras?|watches|wearables|gaming|audio|sales|revenue|customers?|polic(?:y|ies)|banking)\b/i.test(q)) return true
   if (REFERENTIAL.test(remainder)) return false
+  // A named item remains a new topic even when it is absent from our catalog.
+  if (/^(?:do (?:we|you) have|have (?:we|you) got|got|any)\b/i.test(q) && cleanSubjectForProducts(remainder).replace(/[?.!]/g, '').trim().length >= 3) return true
   const words = remainder
     .toLowerCase()
     .replace(/[^a-z0-9' -]/g, ' ')
@@ -580,6 +591,7 @@ function hasOwnSubject(q: string, catalogNames: string[]): boolean {
 function singularize(word: string): string {
   const w = word.toLowerCase()
   if (w.length <= 3) return w
+  if (w === 'movies') return 'movie'
   if (/ies$/.test(w)) return `${w.slice(0, -3)}y`
   // Sibilant endings: "watches" → "watch", "glasses" → "glass", "boxes" → "box"
   if (/(?:sh|ch|ss|zz|x|s)es$/.test(w)) return w.slice(0, -2)
@@ -619,10 +631,20 @@ export function resolveFollowUp(
   priorUserQuestion?: string,
   catalogNames: string[] = []
 ): string {
-  const q = question.trim()
+  const q = normalizeInventoryQuery(question)
+  if (priorUserQuestion && /^(?:now|again|check again|and now|still)[?.!]*$/i.test(q)) return priorUserQuestion
   if (!priorUserQuestion || !FOLLOWUP_KEYWORDS.test(q)) return q
-  const subject = extractSubject(priorUserQuestion)
-  if (!subject) return q
+  const inherited = priorUserQuestion.match(/\(of:\s*([^)]*)\)\s*$/i)?.[1]
+  let subject = inherited || extractSubject(priorUserQuestion)
+  if (inherited) {
+    // Carry the latest explicit constraints forward through multiple turns.
+    const priorText = stripFollowUpAnnotation(priorUserQuestion)
+    const grade = priorText.match(/grade[sd]?\s+[a-f]\b/i)?.[0]
+    const budget = priorText.match(/(?:under|below|less than|up to)\s*[£$€]?\s*\d+(?:\.\d+)?/i)?.[0]
+    if (grade) subject = `${subject.replace(/grade[sd]?\s+[a-f]\b/ig, '').trim()} ${grade}`
+    if (budget) subject = `${subject.replace(/(?:under|below|less than|up to)\s*[£$€]?\s*\d+(?:\.\d+)?/ig, '').trim()} ${budget}`
+  }
+  if (!subject || /\b(sales|revenue|banking|policy|policies|customers?)\b/i.test(subject)) return q
   if (hasOwnSubject(q, catalogNames)) return q
   const ql = q.toLowerCase()
   const subjWords = subject
@@ -634,30 +656,38 @@ export function resolveFollowUp(
   return `${q} (of: ${subject})`
 }
 
-/** Strip sort/recommend/price/grade keywords from a subject so subjectProducts only matches the actual product noun. */
+/** Strip sort/recommend/price/grade/availability words from a subject so subjectProducts only matches the actual product noun. */
 function cleanSubjectForProducts(subject: string): string {
   const cleaned = subject
-    .replace(/cheapest|most expensive|best value|lowest price|highest price|affordable|budget|best (deal|price)|least expensive|lowest|highest|price (low|high|up|down)/gi, '')
-    .replace(/recommend|suggest|find me|looking for|give me/gi, '')
+    .replace(/deals?|cheapest|most expensive|best value|lowest price|highest price|affordable|budget|best (deal|price)|least expensive|lowest|highest|price (low|high|up|down)/gi, '')
+    .replace(/recommend(?:ation|ations|ed|ing|er|ers)?|suggest(?:ion|ions|ed|ing|er|ers)?|find me|looking for|give me/gi, '')
+    .replace(/do (we|you) have|do (we|you) carry|are there|is there|we have|you have|we got|you got|have we|got any|we carry|you carry/i, '')
     .replace(/(?:for|that is|is)\s+(?:under|below|less than|up to)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?\s*\d+(?:\.\d{1,2})?\s*(?:£|\$|gbp|usd|pounds?|dollars?)?/gi, '')
     .replace(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?\s*\d+(?:\.\d{1,2})?\s*(?:£|\$|gbp|usd|pounds?|dollars?)?/gi, '')
     .replace(/\b\d+(?:\.\d{1,2})?\s*(?:£|\$|gbp|usd|pounds?|dollars?)\b/gi, '')
     .replace(/grade[sd]?\s+[a-f]\b/gi, '')
-    .replace(/\b(that|is|it|for|the|a|an|and|or|but|to|of|in|on|at|by|with|from|any|got|some|all|like|just|really|very|also|maybe|perhaps)\b/gi, ' ')
+    .replace(/\b(that|is|it|for|the|a|an|and|or|but|to|of|in|on|at|by|with|from|any|got|some|all|like|just|really|very|also|maybe|perhaps|good|best|nice|great|options?|option|available|availability|right now|right|now|currently|in stock|out of stock|stock|on hand|browse|browsing|category|categories|type|types|kind|kinds|count|total|many|much|about|what|which|how)\b/gi, ' ')
     .replace(/\s{2,}/g, ' ')
     .trim()
-  // Drop any remaining single-letter or two-letter words
-  return cleaned.split(/\s+/).filter((w) => w.length >= 3).join(' ')
+  // Drop any remaining single-letter or two-letter words, plus leftover noise fragments
+  return cleaned
+    .split(/\s+/)
+    .filter((w) => (w.length >= 3 || /^\d+$/.test(w)) && !/^(nation|ation|tions|ions)$/i.test(w))
+    .join(' ')
 }
 
 /** Search-intent / constraint words that should never be treated as product keywords. */
 const INTENT_STOPWORDS = new Set([
-  'recommend', 'recommended', 'recommending', 'recommendation', 'recommendations',
+  'deal', 'deals', 'recommend', 'recommended', 'recommending', 'recommendation', 'recommendations',
   'suggest', 'suggested', 'suggesting', 'suggestion', 'suggestions',
   'looking', 'find', 'show', 'list', 'give', 'cheapest', 'expensive',
   'affordable', 'budget', 'best', 'value', 'price', 'prices', 'under', 'below', 'above',
   'over', 'between', 'less', 'more', 'than', 'grade', 'graded', 'grades',
   'me', 'some', 'would', 'like', 'please', 'could', 'can',
+  'options', 'option', 'available', 'availability', 'right', 'now', 'currently',
+  'stock', 'browse', 'browsing', 'category', 'categories', 'count', 'total',
+  'many', 'much', 'good', 'nice', 'great', 'other', 'another', 'type', 'types',
+  'kind', 'kinds', 'any', 'got', 'carry', 'have', 'had', 'has',
 ])
 
 /** Significant query words (raw + singular) used to pick the subject products, with SYNONYMS expansion. */
@@ -677,6 +707,8 @@ function subjectWords(subject: string): string[] {
 
 /** Products whose name, category, or description matches the subject; whole-catalog nouns match everything. */
 function subjectProducts(subject: string, products: Product[], categories: Category[]): { products: Product[]; correctedSubject?: string } {
+  const numbers = cleanSubjectForProducts(subject).match(/\b\d+\b/g) ?? []
+  if (numbers.length) products = products.filter(p => numbers.every(n => new Set<string>(p.name.match(/\b\d+\b/g) ?? []).has(n)))
   const words = subjectWords(subject)
   if (words.length === 0) return { products: [] }
   // Split words into specific (actor/product) and whole-catalog nouns
@@ -687,6 +719,15 @@ function subjectProducts(subject: string, products: Product[], categories: Categ
   // If there are specific words alongside whole-catalog nouns (e.g. "Tom Cruise movies"),
   // match ONLY on the specific words — the whole-catalog noun is just context, not a filter
   const matchWords = specific.length > 0 ? specific : words
+
+  // Actor constraints apply to recorded cast, not incidental title/genre words.
+  const actorTokens = (subject.toLowerCase().match(/[a-zÀ-ž]+/g) ?? [])
+    .filter(w => !STOPWORDS.has(w) && !INTENT_STOPWORDS.has(w) && !WHOLE_CATALOG.has(singularize(w)) && !['starring', 'actor', 'actress', 'with', 'featuring'].includes(w))
+  if (!actorTokens.length && /\b(movies?|films?|media)\b/i.test(subject)) {
+    return { products: products.filter(p => /\b(movies?|films?|media)\b/i.test(categories.find(c => c.id === p.categoryId)?.name ?? '') || /blu-ray|starring/i.test(p.description)) }
+  }
+  const actorMatches = products.filter(p => matchActorFuzzy(actorTokens, p.description).matched)
+  if (actorTokens.length && actorMatches.length) return { products: actorMatches }
 
   // Build multi-word phrases from the original subject for exact matching
   const rawWords = subject.toLowerCase().match(/[a-z0-9]{3,}/g) ?? []
@@ -757,6 +798,12 @@ function subjectProducts(subject: string, products: Product[], categories: Categ
  * the model or the offline reply.
  */
 export function catalogAnswer(question: string, products: Product[], categories: Category[]): CatalogAnswer | undefined {
+  const comparison = compareAnswer(question, products, categories)
+  if (comparison) return { message: comparison, confidence: 1 }
+  if (/\b(tvs?|televisions?)\b/i.test(question)) {
+    products = products.filter(p => /\b(tv|television)s?\b/i.test(p.name + ' ' + (categories.find(c => c.id === p.categoryId)?.name ?? '')))
+    if (!products.length) return { message: 'We do not have any TVs in the catalog.', confidence: 1 }
+  }
   const ann = question.match(/\(of:\s*([^)]+)\)$/i)
   const raw = stripFollowUpAnnotation(question).trim()
   const subject = ann ? ann[1].trim() : extractSubject(raw)
@@ -783,6 +830,22 @@ export function catalogAnswer(question: string, products: Product[], categories:
   const recommendIntent = /recommend|suggest|show me|looking for|find me|give me|which |what .*(phones|laptops|computers|tablets|devices|products|movies|films|media)/i.test(q)
   const sortIntent = /cheapest|most expensive|best value|lowest price|highest price|affordable|budget|best (deal|price)|lowest|highest|price (low|high|up|down)|least expensive/i.test(q)
 
+  // Shared constraint extraction — used by both the fallback path and the main flow.
+  // Grade detection: "grade F", "graded B", and bare letters like "computers F" / "F phones".
+  const gradeWord = (q.match(/grade[sd]?\s+([a-f])\b/i) ?? [])[1]?.toUpperCase()
+  const bareGrade = (() => {
+    const nouns = 'phones?|laptops?|computers?|tablets?|headphones?|earphones?|earbuds?|wearables?|watches?|smartwatches?|gaming|games?|consoles?|cameras?|drones?|movies?|films?|discs?|ipads?|audio|media|tech|electronics'
+    const after = q.match(new RegExp(`\\b(?:${nouns})\\s+([a-f])\\b`, 'i'))
+    const before = q.match(new RegExp(`\\b([a-f])\\s+(?:${nouns})\\b`, 'i'))
+    const raw = (after ?? before)?.[1]
+    return raw ? raw.toUpperCase() : undefined
+  })()
+  const gradeLetter = gradeWord ?? bareGrade
+  // Price constraints: "under £400", "under 400 pounds", "below $200", "400 GBP"
+  const priceMatch = q.match(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?\s*(\d+(?:\.\d{1,2})?)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?/i)
+    ?? q.match(/(\d+(?:\.\d{1,2})?)\s*(?:£|\$|gbp|usd|pounds?|dollars?)\b/i)
+  const maxPrice = priceMatch ? parseFloat(priceMatch[1]) : undefined
+
   // Category browsing — "what categories", "list categories", "show me categories"
   if (categoryIntent) {
     const catName = new Map(categories.map((c) => [c.id, c.name]))
@@ -799,11 +862,6 @@ export function catalogAnswer(question: string, products: Product[], categories:
     }
   }
   if (!countIntent && !availIntent && !categoryIntent && !recommendIntent && !sortIntent) {
-    // Extract grade/price filters early so we can apply them in the fallback path too
-    const fbGradeLetter = (q.match(/grade[sd]?\s+([a-f])\b/i) ?? [])[1]?.toUpperCase()
-    const fbPriceMatch = q.match(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd)?\s*(\d+(?:\.\d{1,2})?)/i)
-    const fbMaxPrice = fbPriceMatch ? parseFloat(fbPriceMatch[1]) : undefined
-
     // Clean subject: strip sort/recommend/price/grade keywords so we match on the product noun
     const cleaned = cleanSubjectForProducts(subject)
     const searchSubject = cleaned.length >= 3 ? cleaned : subject
@@ -813,12 +871,12 @@ export function catalogAnswer(question: string, products: Product[], categories:
     let result = subjectProducts(searchSubject, products, categories).products
 
     // Apply grade filter if present
-    if (fbGradeLetter && result.length > 0) {
-      result = result.filter((p) => p.grade.toUpperCase() === fbGradeLetter)
+    if (gradeLetter && result.length > 0) {
+      result = result.filter((p) => p.grade.toUpperCase() === gradeLetter)
     }
     // Apply price filter if present
-    if (fbMaxPrice !== undefined && result.length > 0) {
-      result = result.filter((p) => p.price <= fbMaxPrice)
+    if (maxPrice !== undefined && result.length > 0) {
+      result = result.filter((p) => p.price <= maxPrice)
     }
 
     // If no results from subject matching, try category-based filtering
@@ -881,11 +939,6 @@ export function catalogAnswer(question: string, products: Product[], categories:
     return { message: `We don't have anything matching "${subject}" in the catalog.`, confidence: 0.5 }
   }
 
-  const gradeLetter = (q.match(/grade[sd]?\s+([a-f])\b/i) ?? [])[1]?.toUpperCase()
-  // Match price constraints: "under £400", "under 400 pounds", "under 400", "below $200"
-  const priceMatch = q.match(/(?:under|below|less than|cheaper than|up to|no more than|between)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?\s*(\d+(?:\.\d{1,2})?)\s*(?:£|\$|gbp|usd|pounds?|dollars?)?/i)
-    ?? q.match(/(\d+(?:\.\d{1,2})?)\s*(?:£|\$|gbp|usd|pounds?|dollars?)\b/i)
-  const maxPrice = priceMatch ? parseFloat(priceMatch[1]) : undefined
   const stockIntent = /in stock|available|left\b|on hand|out of stock|currently/.test(q)
 
   // Clean subject for product matching: strip sort/recommend/price/grade keywords
@@ -915,32 +968,35 @@ export function catalogAnswer(question: string, products: Product[], categories:
 
     if (gradeOnly.length > 0 && priceOnly.length > 0) {
       // Both constraints exist but no overlap
-      lines.push(`We don't have ${subjectLabel} that are BOTH grade ${gradeLetter} and under £${maxPrice}.`)
-      if (gradeOnly.length > 0) {
-        lines.push(`\nGrade ${gradeLetter} ${subjectLabel} (different prices):`)
-        lines.push(...gradeOnly.slice(0, 3).map((p) => `• ${p.name} · £${p.price.toFixed(2)}`))
-        if (gradeOnly.length > 3) lines.push(`…and ${gradeOnly.length - 3} more`)
-      }
-      if (priceOnly.length > 0) {
-        const different = priceOnly.filter((p) => !gradeOnly.includes(p))
-        if (different.length > 0) {
-          lines.push(`\n${subjectLabel} under £${maxPrice} (different grades):`)
-          lines.push(...different.slice(0, 3).map((p) => `• ${p.name} · Grade ${p.grade} · £${p.price.toFixed(2)}`))
-          if (different.length > 3) lines.push(`…and ${different.length - 3} more`)
+      if (gradeLetter) lines.push(`We don't currently have any ${subjectLabel} that are both grade ${gradeLetter} and under £${maxPrice} in stock.`)
+      // Nearest match: the grade-B option closest to budget, so we can offer the most relevant alternative
+      const nearest = maxPrice !== undefined ? gradeOnly.slice().sort((a, b) => Math.abs(a.price - maxPrice!) - Math.abs(b.price - maxPrice!))[0] : gradeOnly[0]
+      if (nearest) {
+        const diff = nearest.price - (maxPrice ?? 0)
+        if (diff > 0) {
+          lines.push(`\nThe closest we have is the ${nearest.name} (grade ${nearest.grade}) at £${nearest.price.toFixed(2)} — just £${diff.toFixed(2)} over your budget.`)
+        } else {
+          lines.push(`\nThe best grade ${gradeLetter} ${subjectLabel} within your budget is the ${nearest.name} at £${nearest.price.toFixed(2)}.`)
         }
       }
-      if (gradeOnly.length > 0 && gradeOnly[0]) {
-        const diff = gradeOnly[0].price - (maxPrice ?? 0)
-        lines.push(`\nTip: the cheapest grade ${gradeLetter} ${subjectLabel} is £${gradeOnly[0].price.toFixed(2)} — ${diff > 0 ? `£${diff.toFixed(2)} over budget` : 'within reach with a small stretch'}.`)
+      const cheapest = gradeOnly.length > 0 ? gradeOnly.slice().sort((a, b) => a.price - b.price)[0] : undefined
+      if (cheapest && cheapest !== nearest) {
+        lines.push(`If you'd like, the cheapest grade ${gradeLetter} ${subjectLabel} is the ${cheapest.name} at £${cheapest.price.toFixed(2)}.`)
       }
+      const different = priceOnly.filter((p) => !gradeOnly.includes(p))
+      if (different.length > 0) {
+        lines.push(`\nOr for under £${maxPrice} I have these (different grades): ${different.slice(0, 3).map((p) => `${p.name} (grade ${p.grade}) at £${p.price.toFixed(2)}`).join(', ')}${different.length > 3 ? `, and ${different.length - 3} more` : ''}.`)
+      }
+      lines.push(`\nWould you like to know anything else?`)
     } else if (inStockAll.length > 0) {
-      lines.push(`We don't have ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}, but here's what we do have:`)
+      lines.push(`We don't currently have any ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock, but here's what we do have:`)
       lines.push(...inStockAll.slice(0, 4).map(fmtProduct))
       if (inStockAll.length > 4) lines.push(`…and ${inStockAll.length - 4} more`)
+      lines.push(`\nWould you like to know anything else?`)
     } else {
-      return { message: `We don't have any matching ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock right now.`, confidence: 0.75 }
+      return { message: `We don't have any ${subjectLabel}${gradeLetter ? ` grade ${gradeLetter}` : ''}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock right now. Would you like to know anything else?`, confidence: 1 }
     }
-    return { message: lines.join('\n'), confidence: 0.75 }
+    return { message: lines.join('\n'), confidence: 1 }
   }
 
   /** Build a smart "not found" message: detect what the user was looking for and suggest alternatives. */
@@ -982,7 +1038,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
     }
     // Check if the user was searching for an actor by looking for "starring" patterns in subject
     const actorWords = subjectWords(subject).filter((w) => !WHOLE_CATALOG.has(singularize(w)))
-    if (actorWords.length > 0) {
+    if (actorWords.length > 0 && /\b(movies?|films?|actors?|actress|starring|cast)\b/i.test(question)) {
       // Collect all actor names from the catalog
       const allActors: { name: string; movie: string }[] = []
       for (const p of products) {
@@ -1033,7 +1089,18 @@ export function catalogAnswer(question: string, products: Product[], categories:
     if (gradeLetter) {
       const gradeFiltered = matched.filter((p) => p.grade.toUpperCase() === gradeLetter)
       const set = maxPrice !== undefined ? gradeFiltered.filter((p) => p.price <= maxPrice) : gradeFiltered
-      if (set.length === 0) return smartNotFound(subjectLabel, products, categories)
+      if (set.length === 0) {
+        return {
+          message: maxPrice !== undefined
+            ? `We don't have any ${subjectLabel} graded ${gradeLetter} under £${maxPrice}${
+                matched.length > 0 ? ` (we carry ${matched.length} ${subjectLabel} in total).` : '.'
+              }`
+            : `We don't have any ${subjectLabel} graded ${gradeLetter}${
+                matched.length > 0 ? ` (we carry ${matched.length} ${subjectLabel} in total).` : '.'
+              }`,
+          confidence: 1
+        }
+      }
       return {
         message: stockIntent
           ? `We have ${inStock(set).length} ${labelFor(set.length, subjectLabel)} graded ${gradeLetter} in stock (out of ${set.length}).`
@@ -1098,7 +1165,7 @@ export function catalogAnswer(question: string, products: Product[], categories:
     const gradeFiltered = matched.filter((p) => p.grade.toUpperCase() === gradeLetter)
     const set = maxPrice !== undefined ? gradeFiltered.filter((p) => p.price <= maxPrice) : gradeFiltered
     const avail = inStock(set).length
-    if (avail > 0) return { message: `Yes — we have ${avail} ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock.`, confidence: 1 }
+    if (avail > 0) return { message: `Yes — we have ${avail} ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''} in stock:\n${inStock(set).slice(0, 8).map(fmtProduct).join('\n')}`, confidence: 1 }
     return {
       message: set.length > 0
         ? `We carry ${set.length} ${subjectLabel} graded ${gradeLetter}${maxPrice !== undefined ? ` under £${maxPrice}` : ''}, but they're currently out of stock.`
@@ -1431,12 +1498,56 @@ export function buildCustomerPrompt(c: CustomerContext, attached = false): strin
 }
 
 /**
+ * True when a question is aimed at the product catalog rather than store policy:
+ * it names a product/category, or asks about price, grade, stock, or recommendations.
+ *
+ * This is the single source of truth for catalog-vs-policy routing. It is used by
+ * the evidence pipeline AND the offline fallback so that product lookups (e.g.
+ * "can you recommend phones under £200 grade B") are never answered from the
+ * knowledge base. The catalog is the authoritative source for product questions.
+ */
+export function isCatalogQuestion(question: string, products: Product[], categories: Category[]): boolean {
+  const q = question.toLowerCase()
+
+  // Price / grade / stock / recommendation intent — inherently catalog questions.
+  if (/\b(under |below|less than|cheaper|up to|no more than|grade|graded|in stock|out of stock|available|how much|price|budget|recommend|suggest|browse)\b|£|\$|\bpounds?\b|\bdollars?\b|\bgbp\b|\busd\b/i.test(q)) {
+    return true
+  }
+
+  // Category names mentioned verbatim.
+  if (categories.some((c) => c.name.toLowerCase().split(/\s+/).some((w) => w.length >= 4 && new RegExp(`\\b${w}\\b`).test(q)))) {
+    return true
+  }
+
+  // A concrete product token from the catalog.
+  for (const p of products) {
+    for (const w of p.name.toLowerCase().match(/[a-z0-9]{4,}/g) ?? []) {
+      if (new RegExp(`\\b${w}\\b`).test(q)) return true
+    }
+  }
+
+  return false
+}
+
+/**
+ * True when a question is a genuine store-policy / procedure question (how the store
+ * operates) rather than a product lookup. Requires an unambiguous policy keyword and
+ * that the question is not actually about catalog products.
+ */
+export function isProceduralQuestion(question: string, products: Product[], categories: Category[]): boolean {
+  if (/\b(policy|policies|warranty|procedure|how (?:do i|to) (?:return|refund|exchange))\b/i.test(question)) return true
+  if (/\bhow\b/i.test(question) && /\b(checkout|exchanges?|intake|grading|grade a device)\b/i.test(question)) return true
+  if (isCatalogQuestion(question, products, categories)) return false
+  return /\b(how do i|how to|process|procedure|procedures|policy|policies|rules|instructions|guide|workflow|return (?:a )?(?:device|item|product|phone|laptop)|refund|exchange|trade.?in|warranty|restock|grading|intake)\b/i.test(question)
+}
+
+/**
  * Search the knowledge base for relevant chunks and return a formatted answer.
  * Returns undefined when no KB docs are available or no relevant chunks are found.
  */
 export function kbAnswer(question: string, knowledgeDocs: KnowledgeDoc[]): string | undefined {
   if (!knowledgeDocs || knowledgeDocs.length === 0) return undefined
-  const chunks = retrieveKnowledge(knowledgeDocs, question, 3)
+  const chunks = retrieveKnowledge(knowledgeDocs, question, 3).filter(chunk => chunk.score >= 0.5)
   if (chunks.length === 0) return undefined
   // Score threshold: skip chunks that are too weakly relevant
   if (chunks[0].score < 0.5) return undefined
@@ -1483,7 +1594,7 @@ export function customerAnswer(
 }
 
 /** Local canned answers used when the on-device model isn't loaded yet. Fully private, zero dependencies. */
-export function offlineReply(question: string, s: StoreSnapshot, customerCtx?: CustomerContext, attachedName?: string, knowledgeDocs?: KnowledgeDoc[]): string {
+export function offlineReply(question: string, s: StoreSnapshot, customerCtx?: CustomerContext, attachedName?: string, knowledgeDocs?: KnowledgeDoc[], products?: Product[], categories?: Category[]): string {
   const q = stripFollowUpAnnotation(question).toLowerCase().trim()
   const low = s.lowStock
   const lowList = low.slice(0, 5).map((l) => `• ${l.name} — ${l.stock} left`).join('\n')
@@ -1501,12 +1612,19 @@ export function offlineReply(question: string, s: StoreSnapshot, customerCtx?: C
 
   // Knowledge base first — for procedural / operational / policy questions the canned
   // keyword checks below would otherwise intercept with less-specific answers.
-  if (knowledgeDocs && knowledgeDocs.length > 0) {
-    const procedural = /\b(how|what|why|when|where|which|can i|can you|do i|steps|process|procedure|policy|policies|rules|instructions|guide|workflow)\b/i.test(q)
-    if (procedural) {
-      const kbResult = kbAnswer(question, knowledgeDocs)
-      if (kbResult) return kbResult
-    }
+  // The KB is also actively consulted for ANY question with a strong FAQ-style
+  // match (kbStronglyMatches), not just policy-keyword ones, so uploaded FAQ
+  // documents answer even without a keyword like "policy" or "return". Product
+  // lookups without a real KB overlap still route to the catalog path.
+  if (
+    knowledgeDocs &&
+    knowledgeDocs.length > 0 &&
+    products &&
+    categories &&
+    (isProceduralQuestion(question, products, categories) || kbStronglyMatches(question, knowledgeDocs))
+  ) {
+    const kbResult = kbAnswer(question, knowledgeDocs)
+    if (kbResult) return kbResult
   }
 
   if (q.includes('refund') || q.includes('return')) {
@@ -1640,4 +1758,15 @@ function customerOfflineAnswer(c: CustomerContext, s: StoreSnapshot, question: s
     }
   }
   return lines.join('\n')
+}
+
+export function inventoryProducts(subject: string, products: Product[], categories: Category[]): Product[] {
+  const clean = cleanSubjectForProducts(subject)
+  const sku = products.find(p => p.sku.toLowerCase() === subject.trim().toLowerCase())
+  let matches = sku ? [sku] : subjectProducts(clean, products, categories).products
+  const grade = subject.match(/grade[sd]?\s+([a-f])\b/i)?.[1]
+  const budget = subject.match(/(?:under|below|less than|up to)\s*[£$€]?\s*(\d+(?:\.\d+)?)/i)?.[1]
+  if (grade) matches = matches.filter(p => p.grade.toLowerCase() === grade.toLowerCase())
+  if (budget) matches = matches.filter(p => p.price <= Number(budget))
+  return matches
 }

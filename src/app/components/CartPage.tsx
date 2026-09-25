@@ -153,10 +153,12 @@ export function CartPage({ onBack, onActivateCustomerSearch, initialItems = [], 
     .filter((item) => item.type === 'sell' || item.type === 'exchange')
     .reduce((sum, item) => sum + item.qty, 0);
 
-  // Calculate totals
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.qty, 0);
-  const tax = subtotal * 0.2; // 20% VAT
-  const total = subtotal + tax;
+  // Calculate totals — SELL adds to bank, BUY deducts from bank
+  // Example: 419 sell + 389 buy => net 30 customer pays us; 419 buy + 389 sell => net -30 we pay customer
+  // VAT is 20% on sell side only and shown for info, but balance for mixed carts is net sell-buy
+  const subtotal = sellTotal - buyTotal; // net before tax (exchange shown separately, not netted here)
+  const tax = sellTotal * 0.2; // info only — not added to payout calc
+  const total = Math.round(subtotal * 100) / 100; // can be negative => payout to customer (matches store.netTotal)
 
   // Check if any items are missing serial numbers
   const hasPendingSerialNumbers = items.some(
@@ -249,7 +251,7 @@ export function CartPage({ onBack, onActivateCustomerSearch, initialItems = [], 
     setDeleteDialog(null);
   };
 
-  // Determine CTA state and text
+  // Determine CTA state and text — bank logic: SELL money IN, BUY money OUT
   const getCTAState = () => {
     if (items.length === 0) {
       return { disabled: true, text: 'No Items' };
@@ -260,7 +262,9 @@ export function CartPage({ onBack, onActivateCustomerSearch, initialItems = [], 
     if (!customerAdded) {
       return { disabled: true, text: 'Customer Not Selected' };
     }
-    return { disabled: false, text: `WE OWE: £${total.toFixed(2)}` };
+    if (total > 0.005) return { disabled: false, text: `PAY: £${total.toFixed(2)}` };
+    if (total < -0.005) return { disabled: false, text: `PAYOUT: £${Math.abs(total).toFixed(2)}` };
+    return { disabled: false, text: `BALANCED — £0.00` };
   };
 
   const ctaState = getCTAState();

@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: mepos-pos-app
+    env: static
+    plan: free
+    branch: main
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    autoDeploy: false
+    # HashRouter is used (/#/ and /#/admin), so no rewrite rules required for SPA
+    # If you switch to BrowserRouter, add:
+    # routes:
+    #   - type: rewrite
+    #     source: /*
+    #     destination: /index.html
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    envVars:
+      - key: NODE_VERSION
+        value: 20.19.0
+      - key: NPM_CONFIG_PRODUCTION
+        value: false
