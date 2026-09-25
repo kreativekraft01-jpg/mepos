@@ -130,6 +130,5 @@ if (staticDir) {
   app.get('/', (_req, res) => res.send('MEPoS API running — build frontend with `npm run build` to serve UI'))
 }
 
-initPrisma().then(() => {
-  app.listen(PORT, () => console.log(`[server] MEPoS dynamic server listening on :${PORT} (${usePrisma ? 'postgres' : 'fallback'})`))
-})
+app.listen(PORT, () => console.log(`[server] MEPoS dynamic server listening on :${PORT}`))
+void initPrisma()
