@@ -6,7 +6,9 @@ services:
     branch: main
     buildCommand: npm ci && npm run build && npm --prefix server ci && npx --prefix server prisma generate && npx --prefix server prisma db push --accept-data-loss || true
     startCommand: node server/dist/server.js
-    autoDeploy: false
+    autoDeploy: true
+    previews:
+      generation: automatic
     healthCheckPath: /api/health
     envVars:
       - key: NODE_VERSION
