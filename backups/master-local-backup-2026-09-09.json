@@ -1,0 +1,3044 @@
+{
+  "app": "nova-pos",
+  "version": 1,
+  "storeVersion": 16,
+  "exportedAt": "2026-09-09T08:06:42.056Z",
+  "data": {
+    "categories": [
+      {
+        "id": "cat-phones",
+        "name": "Smartphones",
+        "color": "#0ea5e9"
+      },
+      {
+        "id": "cat-computers",
+        "name": "Laptops & Tablets",
+        "color": "#6366f1"
+      },
+      {
+        "id": "cat-audio",
+        "name": "Audio & Headphones",
+        "color": "#f59e0b"
+      },
+      {
+        "id": "cat-wearables",
+        "name": "Wearables",
+        "color": "#10b981"
+      },
+      {
+        "id": "cat-gaming",
+        "name": "Gaming",
+        "color": "#8b5cf6"
+      },
+      {
+        "id": "cat-cameras",
+        "name": "Cameras & Drones",
+        "color": "#ef4444"
+      },
+      {
+        "id": "cat-movies",
+        "name": "Media/Movies",
+        "color": "#e11d48"
+      }
+    ],
+    "products": [
+      {
+        "id": "d46888cf-4fc4-402b-a8ef-086dee9d3968",
+        "sku": "PH-001",
+        "name": "iPhone 15 · 128GB",
+        "description": "Refurbished · Grade A · Unlocked · 100-pt inspection · 12-mo warranty",
+        "categoryId": "cat-phones",
+        "grade": "A",
+        "price": 419.99,
+        "cost": 260,
+        "stock": 12,
+        "lowStockThreshold": 4,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📱</text></svg>",
+        "createdAt": 1783757202050,
+        "buyPrice": 234,
+        "exchangePrice": 356.99,
+        "requiresSerial": true
+      },
+      {
+        "id": "4db03ef9-5761-42b4-bccc-2422f081c64e",
+        "sku": "PH-002",
+        "name": "iPhone 15 · 128GB",
+        "description": "Refurbished · Grade C · Unlocked · battery ≥ 80% · 12-mo warranty",
+        "categoryId": "cat-phones",
+        "grade": "C",
+        "price": 349.99,
+        "cost": 210,
+        "stock": 6,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📱</text></svg>",
+        "createdAt": 1786349202050,
+        "buyPrice": 189,
+        "exchangePrice": 297.49,
+        "requiresSerial": true
+      },
+      {
+        "id": "67211470-837c-441d-abc8-640434378584",
+        "sku": "PH-003",
+        "name": "iPhone 13 · 128GB",
+        "description": "Refurbished · Grade B · Unlocked · light wear · 12-mo warranty",
+        "categoryId": "cat-phones",
+        "grade": "B",
+        "price": 269.99,
+        "cost": 160,
+        "stock": 9,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📱</text></svg>",
+        "createdAt": 1778573202050,
+        "buyPrice": 144,
+        "exchangePrice": 229.49,
+        "requiresSerial": true
+      },
+      {
+        "id": "8aaa43e9-9fdc-4afd-9f59-d9133979b603",
+        "sku": "PH-004",
+        "name": "Galaxy S23 · 256GB",
+        "description": "Refurbished · Grade A · Unlocked · like new · 12-mo warranty",
+        "categoryId": "cat-phones",
+        "grade": "A",
+        "price": 389.99,
+        "cost": 240,
+        "stock": 7,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📱</text></svg>",
+        "createdAt": 1785053202050,
+        "buyPrice": 216,
+        "exchangePrice": 331.49,
+        "requiresSerial": true
+      },
+      {
+        "id": "e007c6a0-6684-4da6-946d-dd0dc0664b14",
+        "sku": "PH-005",
+        "name": "Galaxy S22 · 128GB",
+        "description": "Refurbished · Grade D · Unlocked · scuffs, works fine · 12-mo warranty",
+        "categoryId": "cat-phones",
+        "grade": "D",
+        "price": 179.99,
+        "cost": 100,
+        "stock": 3,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📱</text></svg>",
+        "createdAt": 1771661202050,
+        "buyPrice": 90,
+        "exchangePrice": 152.99,
+        "requiresSerial": true
+      },
+      {
+        "id": "21b49821-eb1e-46f0-8611-4c2dadcffe4c",
+        "sku": "PH-006",
+        "name": "Pixel 7 · 128GB",
+        "description": "Refurbished · Grade B · Unlocked · light wear · 12-mo warranty",
+        "categoryId": "cat-phones",
+        "grade": "B",
+        "price": 229.99,
+        "cost": 140,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📱</text></svg>",
+        "createdAt": 1781165202050,
+        "buyPrice": 126,
+        "exchangePrice": 195.49,
+        "requiresSerial": true
+      },
+      {
+        "id": "3a1a59d5-7547-4f1f-82d3-e17734bbc1a8",
+        "sku": "PH-007",
+        "name": "iPhone 12 · 64GB",
+        "description": "Refurbished · Grade F · For parts · not fully tested · 12-mo warranty",
+        "categoryId": "cat-phones",
+        "grade": "F",
+        "price": 99,
+        "cost": 50,
+        "stock": 4,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📱</text></svg>",
+        "createdAt": 1763021202050,
+        "buyPrice": 45,
+        "exchangePrice": 84.15,
+        "requiresSerial": true
+      },
+      {
+        "id": "2ebb8ff3-a5e0-405a-84ea-5f75fe506267",
+        "sku": "CO-001",
+        "name": "MacBook Air M2 · 13\"",
+        "description": "Refurbished · Grade A · 8GB / 256GB · battery ≥ 90% · 12-mo warranty",
+        "categoryId": "cat-computers",
+        "grade": "A",
+        "price": 769,
+        "cost": 520,
+        "stock": 4,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💻</text></svg>",
+        "createdAt": 1788077202050,
+        "buyPrice": 468,
+        "exchangePrice": 653.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+        "sku": "CO-002",
+        "name": "MacBook Air M2 · 13\"",
+        "description": "Refurbished · Grade C · 8GB / 256GB · visible wear · 12-mo warranty",
+        "categoryId": "cat-computers",
+        "grade": "C",
+        "price": 619,
+        "cost": 400,
+        "stock": 2,
+        "lowStockThreshold": 1,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💻</text></svg>",
+        "createdAt": 1783757202050,
+        "buyPrice": 360,
+        "exchangePrice": 526.15,
+        "requiresSerial": true
+      },
+      {
+        "id": "f13a0f53-da0b-494f-8d3c-3d543f9ae8f5",
+        "sku": "CO-003",
+        "name": "MacBook Pro 14\" · M3",
+        "description": "Refurbished · Grade B · 16GB / 512GB · light wear · 12-mo warranty",
+        "categoryId": "cat-computers",
+        "grade": "B",
+        "price": 1299,
+        "cost": 900,
+        "stock": 3,
+        "lowStockThreshold": 1,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💻</text></svg>",
+        "createdAt": 1787213202050,
+        "buyPrice": 810,
+        "exchangePrice": 1104.15,
+        "requiresSerial": true
+      },
+      {
+        "id": "bb116fdf-4911-4710-99bc-a6584d7d60f3",
+        "sku": "CO-004",
+        "name": "iPad 10th gen · 64GB",
+        "description": "Refurbished · Grade A · Wi-Fi · like new · 12-mo warranty",
+        "categoryId": "cat-computers",
+        "grade": "A",
+        "price": 319,
+        "cost": 200,
+        "stock": 8,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📲</text></svg>",
+        "createdAt": 1785485202050,
+        "buyPrice": 180,
+        "exchangePrice": 271.15,
+        "requiresSerial": true
+      },
+      {
+        "id": "175cd61c-9324-4c77-bb56-14ae7bd2e676",
+        "sku": "CO-005",
+        "name": "HP EliteBook 840 G8",
+        "description": "Refurbished · Grade B · i5 · 16GB / 512GB · business grade · 12-mo warranty",
+        "categoryId": "cat-computers",
+        "grade": "B",
+        "price": 349,
+        "cost": 210,
+        "stock": 6,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💻</text></svg>",
+        "createdAt": 1775981202050,
+        "buyPrice": 189,
+        "exchangePrice": 296.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "51fda429-6fb3-45a1-9261-ddd7d0a4514e",
+        "sku": "AU-001",
+        "name": "AirPods Pro 2",
+        "description": "Refurbished · Grade A · USB-C case · like new · 12-mo warranty",
+        "categoryId": "cat-audio",
+        "grade": "A",
+        "price": 179,
+        "cost": 110,
+        "stock": 15,
+        "lowStockThreshold": 5,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎧</text></svg>",
+        "createdAt": 1788336402050,
+        "buyPrice": 99,
+        "exchangePrice": 152.15,
+        "requiresSerial": false
+      },
+      {
+        "id": "496b9857-1f63-40f8-b966-ac82f8200d2d",
+        "sku": "AU-002",
+        "name": "Sony WH-1000XM4",
+        "description": "Refurbished · Grade B · ANC · light wear · 12-mo warranty",
+        "categoryId": "cat-audio",
+        "grade": "B",
+        "price": 199,
+        "cost": 120,
+        "stock": 10,
+        "lowStockThreshold": 4,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎧</text></svg>",
+        "createdAt": 1782029202050,
+        "buyPrice": 108,
+        "exchangePrice": 169.15,
+        "requiresSerial": false
+      },
+      {
+        "id": "31eaf2eb-ee50-496b-b2e8-a364fa1267b3",
+        "sku": "AU-003",
+        "name": "Bose QC45",
+        "description": "Refurbished · Grade C · ANC · visible wear · 12-mo warranty",
+        "categoryId": "cat-audio",
+        "grade": "C",
+        "price": 169,
+        "cost": 95,
+        "stock": 4,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎧</text></svg>",
+        "createdAt": 1780301202050,
+        "buyPrice": 85.5,
+        "exchangePrice": 143.65,
+        "requiresSerial": false
+      },
+      {
+        "id": "82e85511-e5d1-4d29-aa70-ba49f6a61902",
+        "sku": "AU-004",
+        "name": "JBL Flip 6",
+        "description": "Refurbished · Grade A · Waterproof · like new · 12-mo warranty",
+        "categoryId": "cat-audio",
+        "grade": "A",
+        "price": 89,
+        "cost": 50,
+        "stock": 12,
+        "lowStockThreshold": 4,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🔊</text></svg>",
+        "createdAt": 1782893202050,
+        "buyPrice": 45,
+        "exchangePrice": 75.65,
+        "requiresSerial": false
+      },
+      {
+        "id": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+        "sku": "WE-001",
+        "name": "Apple Watch S9 · 45mm",
+        "description": "Refurbished · Grade A · GPS + Cellular · like new · 12-mo warranty",
+        "categoryId": "cat-wearables",
+        "grade": "A",
+        "price": 279,
+        "cost": 170,
+        "stock": 6,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>⌚</text></svg>",
+        "createdAt": 1788509202050,
+        "buyPrice": 153,
+        "exchangePrice": 237.15,
+        "requiresSerial": true
+      },
+      {
+        "id": "d820acd5-7a0a-4915-be84-0c9b93368555",
+        "sku": "WE-002",
+        "name": "Apple Watch SE",
+        "description": "Refurbished · Grade B · 40mm GPS · light wear · 12-mo warranty",
+        "categoryId": "cat-wearables",
+        "grade": "B",
+        "price": 169,
+        "cost": 100,
+        "stock": 8,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>⌚</text></svg>",
+        "createdAt": 1781165202050,
+        "buyPrice": 90,
+        "exchangePrice": 143.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "5d6d5763-0987-4b6b-b0ec-53a5b4f1ac12",
+        "sku": "WE-003",
+        "name": "Galaxy Watch 6 · 40mm",
+        "description": "Refurbished · Grade C · Bluetooth · visible wear · 12-mo warranty",
+        "categoryId": "cat-wearables",
+        "grade": "C",
+        "price": 129,
+        "cost": 70,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>⌚</text></svg>",
+        "createdAt": 1777709202050,
+        "buyPrice": 63,
+        "exchangePrice": 109.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "94487c31-db72-4449-b868-8cbd8c97b948",
+        "sku": "GA-001",
+        "name": "PS5 Disc Edition",
+        "description": "Refurbished · Grade A · 1 controller · like new · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "A",
+        "price": 349,
+        "cost": 230,
+        "stock": 4,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎮</text></svg>",
+        "createdAt": 1787645202050,
+        "buyPrice": 207,
+        "exchangePrice": 296.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "aa6921f2-ab37-46f0-9dc5-d6ab3a1c4b7a",
+        "sku": "GA-002",
+        "name": "Xbox Series S",
+        "description": "Refurbished · Grade B · 512GB · light wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "B",
+        "price": 189,
+        "cost": 110,
+        "stock": 7,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎮</text></svg>",
+        "createdAt": 1784189202050,
+        "buyPrice": 99,
+        "exchangePrice": 160.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "3afa93c4-3f36-4ba7-b587-109174a5d94e",
+        "sku": "GA-003",
+        "name": "Nintendo Switch OLED",
+        "description": "Refurbished · Grade C · Joy-Cons · visible wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "C",
+        "price": 229,
+        "cost": 150,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🕹️</text></svg>",
+        "createdAt": 1782461202050,
+        "buyPrice": 135,
+        "exchangePrice": 194.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "78fec03a-c615-4aba-aae7-1e7158f2653e",
+        "sku": "GA-004",
+        "name": "Zelda: Tears of the Kingdom",
+        "description": "Refurbished · Grade B · Switch · case & cart, light wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "B",
+        "price": 39.99,
+        "cost": 24,
+        "stock": 6,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎮</text></svg>",
+        "createdAt": 1786781202050,
+        "buyPrice": 21.6,
+        "exchangePrice": 33.99,
+        "requiresSerial": false
+      },
+      {
+        "id": "4d7b7216-1480-4982-88cf-1f123b961e6d",
+        "sku": "GA-005",
+        "name": "Mario Kart 8 Deluxe",
+        "description": "Refurbished · Grade B · Switch · case & cart, light wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "B",
+        "price": 34.99,
+        "cost": 20,
+        "stock": 9,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎮</text></svg>",
+        "createdAt": 1785485202050,
+        "buyPrice": 18,
+        "exchangePrice": 29.74,
+        "requiresSerial": false
+      },
+      {
+        "id": "f9f7675e-277c-4f6c-9267-7bea972df93f",
+        "sku": "GA-006",
+        "name": "Animal Crossing: New Horizons",
+        "description": "Refurbished · Grade C · Switch · cart tested, marks on case · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "C",
+        "price": 29.99,
+        "cost": 16,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎮</text></svg>",
+        "createdAt": 1783325202050,
+        "buyPrice": 14.4,
+        "exchangePrice": 25.49,
+        "requiresSerial": false
+      },
+      {
+        "id": "98cf3f30-9b52-4b41-b5ce-b458ece9352d",
+        "sku": "GA-007",
+        "name": "Super Mario Odyssey",
+        "description": "Refurbished · Grade C · Switch · cart tested, case wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "C",
+        "price": 24.99,
+        "cost": 13,
+        "stock": 4,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎮</text></svg>",
+        "createdAt": 1781597202050,
+        "buyPrice": 11.7,
+        "exchangePrice": 21.24,
+        "requiresSerial": false
+      },
+      {
+        "id": "ef2d6ee0-b5c6-4860-8018-9beba13e914f",
+        "sku": "GA-008",
+        "name": "God of War Ragnarök",
+        "description": "Refurbished · Grade A · PS5 · disc, like new · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "A",
+        "price": 34.99,
+        "cost": 20,
+        "stock": 7,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💿</text></svg>",
+        "createdAt": 1787904402050,
+        "buyPrice": 18,
+        "exchangePrice": 29.74,
+        "requiresSerial": false
+      },
+      {
+        "id": "4508070f-1034-412c-b948-24364a7220e0",
+        "sku": "GA-009",
+        "name": "Spider-Man 2",
+        "description": "Refurbished · Grade B · PS5 · disc, light wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "B",
+        "price": 29.99,
+        "cost": 17,
+        "stock": 8,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💿</text></svg>",
+        "createdAt": 1785917202050,
+        "buyPrice": 15.3,
+        "exchangePrice": 25.49,
+        "requiresSerial": false
+      },
+      {
+        "id": "5c246d93-763b-4787-81db-7e17349989c2",
+        "sku": "GA-010",
+        "name": "Elden Ring",
+        "description": "Refurbished · Grade C · PS5 · disc, case wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "C",
+        "price": 27.99,
+        "cost": 15,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💿</text></svg>",
+        "createdAt": 1780733202050,
+        "buyPrice": 13.5,
+        "exchangePrice": 23.79,
+        "requiresSerial": false
+      },
+      {
+        "id": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+        "sku": "GA-011",
+        "name": "Halo Infinite",
+        "description": "Refurbished · Grade C · Xbox · disc, case wear · 12-mo warranty",
+        "categoryId": "cat-gaming",
+        "grade": "C",
+        "price": 14.99,
+        "cost": 8,
+        "stock": 6,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>💿</text></svg>",
+        "createdAt": 1778573202050,
+        "buyPrice": 7.2,
+        "exchangePrice": 12.74,
+        "requiresSerial": false
+      },
+      {
+        "id": "2ffce924-0711-43c9-9e7a-ce793536e92d",
+        "sku": "CM-001",
+        "name": "Canon EOS R50",
+        "description": "Refurbished · Grade A · Body + 18-45mm kit lens · 12-mo warranty",
+        "categoryId": "cat-cameras",
+        "grade": "A",
+        "price": 529,
+        "cost": 360,
+        "stock": 3,
+        "lowStockThreshold": 1,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>📷</text></svg>",
+        "createdAt": 1785917202050,
+        "buyPrice": 324,
+        "exchangePrice": 449.65,
+        "requiresSerial": true
+      },
+      {
+        "id": "71f44dcd-f171-49fb-91b2-844e994f8e2e",
+        "sku": "CM-002",
+        "name": "DJI Mini 3",
+        "description": "Refurbished · Grade B · RC-N1 remote · light wear · 12-mo warranty",
+        "categoryId": "cat-cameras",
+        "grade": "B",
+        "price": 339,
+        "cost": 220,
+        "stock": 2,
+        "lowStockThreshold": 1,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🚁</text></svg>",
+        "createdAt": 1779437202050,
+        "buyPrice": 198,
+        "exchangePrice": 288.15,
+        "requiresSerial": true
+      },
+      {
+        "id": "b56014c3-fdf3-48ae-8c3f-7b293e7bfd29",
+        "sku": "MV-001",
+        "name": "Spider-Man: No Way Home",
+        "description": "Blu-ray · starring Tom Holland, Zendaya, Benedict Cumberbatch · multiverse superhero action · 2021 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 14.99,
+        "cost": 7,
+        "stock": 8,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1787213202050,
+        "buyPrice": 6.3,
+        "exchangePrice": 12.74,
+        "requiresSerial": false
+      },
+      {
+        "id": "67ebec14-ff2d-4f82-87c8-40e04287a967",
+        "sku": "MV-002",
+        "name": "Oppenheimer",
+        "description": "4K UHD Blu-ray · starring Cillian Murphy, Emily Blunt, Robert Downey Jr. · historical drama · 2023 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 19.99,
+        "cost": 10,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1787645202050,
+        "buyPrice": 9,
+        "exchangePrice": 16.99,
+        "requiresSerial": false
+      },
+      {
+        "id": "12947c1c-e056-457b-91d1-182c8c2ae8fe",
+        "sku": "MV-003",
+        "name": "The Batman",
+        "description": "Blu-ray · starring Robert Pattinson, Zoë Kravitz, Paul Dano · superhero noir · 2022 · Grade B",
+        "categoryId": "cat-movies",
+        "grade": "B",
+        "price": 12.99,
+        "cost": 6,
+        "stock": 6,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1785053202050,
+        "buyPrice": 5.4,
+        "exchangePrice": 11.04,
+        "requiresSerial": false
+      },
+      {
+        "id": "3a82984e-6694-4db7-a96b-fcbcdb580cad",
+        "sku": "MV-004",
+        "name": "Dune: Part Two",
+        "description": "4K UHD Blu-ray · starring Timothée Chalamet, Zendaya, Austin Butler · sci-fi epic · 2024 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 21.99,
+        "cost": 12,
+        "stock": 4,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1788077202050,
+        "buyPrice": 10.8,
+        "exchangePrice": 18.69,
+        "requiresSerial": false
+      },
+      {
+        "id": "1c287cdb-5525-4d34-a299-ff05bde9a56f",
+        "sku": "MV-005",
+        "name": "Interstellar",
+        "description": "Blu-ray · starring Matthew McConaughey, Anne Hathaway, Jessica Chastain · sci-fi drama · 2014 · Grade B",
+        "categoryId": "cat-movies",
+        "grade": "B",
+        "price": 9.99,
+        "cost": 4,
+        "stock": 10,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1783757202050,
+        "buyPrice": 3.6,
+        "exchangePrice": 8.49,
+        "requiresSerial": false
+      },
+      {
+        "id": "e9a48a06-11b9-48a5-8d80-90c65d79b85e",
+        "sku": "MV-006",
+        "name": "Barbie",
+        "description": "Blu-ray · starring Margot Robbie, Ryan Gosling · comedy fantasy · 2023 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 13.99,
+        "cost": 7,
+        "stock": 7,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1786349202050,
+        "buyPrice": 6.3,
+        "exchangePrice": 11.89,
+        "requiresSerial": false
+      },
+      {
+        "id": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+        "sku": "MV-007",
+        "name": "John Wick: Chapter 4",
+        "description": "4K UHD Blu-ray · starring Keanu Reeves, Donnie Yen, Bill Skarsgård · action thriller · 2023 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 18.99,
+        "cost": 9,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1786781202050,
+        "buyPrice": 8.1,
+        "exchangePrice": 16.14,
+        "requiresSerial": false
+      },
+      {
+        "id": "5f6d6749-84e4-4c8f-83a9-ffab267524a3",
+        "sku": "MV-008",
+        "name": "Everything Everywhere All at Once",
+        "description": "Blu-ray · starring Michelle Yeoh, Ke Huy Quan, Stephanie Hsu · sci-fi action comedy · 2022 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 11.99,
+        "cost": 5,
+        "stock": 6,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1785485202050,
+        "buyPrice": 4.5,
+        "exchangePrice": 10.19,
+        "requiresSerial": false
+      },
+      {
+        "id": "0a3691b3-dc19-4527-beb2-e46539e2736b",
+        "sku": "MV-009",
+        "name": "Top Gun: Maverick",
+        "description": "Blu-ray · starring Tom Cruise, Miles Teller, Jennifer Connelly · action drama · 2022 · Grade B",
+        "categoryId": "cat-movies",
+        "grade": "B",
+        "price": 10.99,
+        "cost": 5,
+        "stock": 9,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1784189202050,
+        "buyPrice": 4.5,
+        "exchangePrice": 9.34,
+        "requiresSerial": false
+      },
+      {
+        "id": "7abcf5ef-8dc5-4817-b6d2-991b396686cf",
+        "sku": "MV-010",
+        "name": "Black Panther: Wakanda Forever",
+        "description": "Blu-ray · starring Letitia Wright, Angela Bassett, Tenoch Huerta · superhero action · 2022 · Grade C",
+        "categoryId": "cat-movies",
+        "grade": "C",
+        "price": 8.99,
+        "cost": 3,
+        "stock": 4,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1781165202050,
+        "buyPrice": 2.7,
+        "exchangePrice": 7.64,
+        "requiresSerial": false
+      },
+      {
+        "id": "4b5ab075-b3eb-4286-ae37-f205e046577d",
+        "sku": "MV-011",
+        "name": "Glass Onion: A Knives Out Mystery",
+        "description": "Blu-ray · starring Daniel Craig, Edward Norton, Janelle Monáe · mystery comedy · 2022 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 12.99,
+        "cost": 6,
+        "stock": 5,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1785917202050,
+        "buyPrice": 5.4,
+        "exchangePrice": 11.04,
+        "requiresSerial": false
+      },
+      {
+        "id": "088c781e-e94c-4d6f-9188-af8ce90be366",
+        "sku": "MV-012",
+        "name": "The Dark Knight",
+        "description": "Blu-ray · starring Christian Bale, Heath Ledger, Aaron Eckhart · superhero crime drama · 2008 · Grade B",
+        "categoryId": "cat-movies",
+        "grade": "B",
+        "price": 7.99,
+        "cost": 3,
+        "stock": 12,
+        "lowStockThreshold": 4,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1778573202050,
+        "buyPrice": 2.7,
+        "exchangePrice": 6.79,
+        "requiresSerial": false
+      },
+      {
+        "id": "45fc1de2-5cb4-42ad-9761-45c22a75857d",
+        "sku": "MV-013",
+        "name": "Guardians of the Galaxy Vol. 3",
+        "description": "Blu-ray · starring Chris Pratt, Zoe Saldaña, Dave Bautista · sci-fi comedy action · 2023 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 14.99,
+        "cost": 7,
+        "stock": 6,
+        "lowStockThreshold": 2,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1787386002050,
+        "buyPrice": 6.3,
+        "exchangePrice": 12.74,
+        "requiresSerial": false
+      },
+      {
+        "id": "6f42035b-551b-4239-9867-d0edddecf5e0",
+        "sku": "MV-014",
+        "name": "Puss in Boots: The Last Wish",
+        "description": "Blu-ray · starring Antonio Banderas, Salma Hayek, Florence Pugh · animated adventure · 2022 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 11.99,
+        "cost": 5,
+        "stock": 8,
+        "lowStockThreshold": 3,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1784621202050,
+        "buyPrice": 4.5,
+        "exchangePrice": 10.19,
+        "requiresSerial": false
+      },
+      {
+        "id": "fd77c07c-022c-4cbe-9b48-f61121548c85",
+        "sku": "MV-015",
+        "name": "Killers of the Flower Moon",
+        "description": "4K UHD Blu-ray · starring Leonardo DiCaprio, Robert De Niro, Lily Gladstone · crime drama · 2023 · Grade A",
+        "categoryId": "cat-movies",
+        "grade": "A",
+        "price": 19.99,
+        "cost": 10,
+        "stock": 3,
+        "lowStockThreshold": 1,
+        "image": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23f1f5f9'/><text x='50' y='62' font-size='46' text-anchor='middle'>🎬</text></svg>",
+        "createdAt": 1788250002050,
+        "buyPrice": 9,
+        "exchangePrice": 16.99,
+        "requiresSerial": false
+      }
+    ],
+    "customers": [
+      {
+        "id": "63398edc-159f-41c4-b5fc-7287b644d422",
+        "name": "Walk-in Customer",
+        "phone": "",
+        "email": "",
+        "balance": 0,
+        "notes": "",
+        "createdAt": 1788941202050
+      },
+      {
+        "id": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "name": "Amelia Hart",
+        "phone": "+1 555-0142",
+        "email": "amelia@example.com",
+        "balance": 0,
+        "notes": "Trades in her phone each cycle · upgrades to latest Apple",
+        "createdAt": 1788941202050
+      },
+      {
+        "id": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "name": "Liam Chen",
+        "phone": "+1 555-0177",
+        "email": "liam@example.com",
+        "balance": 14.75,
+        "notes": "Budget buyer · repairs and flips older devices · pays by store credit",
+        "createdAt": 1788941202050
+      },
+      {
+        "id": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "name": "Sofia Reyes",
+        "phone": "+1 555-0193",
+        "email": "sofia@example.com",
+        "balance": 0,
+        "notes": "VIP · premium Apple gear, buys grade A/B only",
+        "createdAt": 1788941202050
+      },
+      {
+        "id": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "name": "Noah Patel",
+        "phone": "+1 555-0110",
+        "email": "noah@example.com",
+        "balance": 6.2,
+        "notes": "Audio & accessories · exchanges items often",
+        "createdAt": 1788941202050
+      }
+    ],
+    "sales": [
+      {
+        "id": "69e019b4-9e15-4861-a860-d5ee1a4e257b",
+        "receiptNo": "1001",
+        "items": [
+          {
+            "productId": "f9f7675e-277c-4f6c-9267-7bea972df93f",
+            "name": "Animal Crossing: New Horizons",
+            "price": 29.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 29.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 2.3992,
+        "total": 32.39,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 33,
+        "changeDue": 0.61,
+        "createdAt": 1786781235000
+      },
+      {
+        "id": "9a556899-ea79-41e6-ae84-113be340602b",
+        "receiptNo": "1002",
+        "items": [
+          {
+            "productId": "ef2d6ee0-b5c6-4860-8018-9beba13e914f",
+            "name": "God of War Ragnarök",
+            "price": 34.99,
+            "qty": 2
+          },
+          {
+            "productId": "d46888cf-4fc4-402b-a8ef-086dee9d3968",
+            "name": "iPhone 15 · 128GB",
+            "price": 419.99,
+            "qty": 2
+          },
+          {
+            "productId": "2ebb8ff3-a5e0-405a-84ea-5f75fe506267",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 769,
+            "qty": 3
+          }
+        ],
+        "subtotal": 3216.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 257.3568,
+        "total": 3474.32,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "cashReceived": 3475,
+        "changeDue": 0.68,
+        "createdAt": 1786807294000
+      },
+      {
+        "id": "615e5337-7832-4d1f-a1c7-7e69d8afa0e5",
+        "receiptNo": "1003",
+        "items": [
+          {
+            "productId": "71f44dcd-f171-49fb-91b2-844e994f8e2e",
+            "name": "DJI Mini 3",
+            "price": 339,
+            "qty": 2
+          }
+        ],
+        "subtotal": 678,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 54.24,
+        "total": 732.24,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "cashReceived": 733,
+        "changeDue": 0.76,
+        "createdAt": 1786842691000
+      },
+      {
+        "id": "a11d027d-0347-4d9b-9c0f-8e66b4c5bbe8",
+        "receiptNo": "1004",
+        "items": [
+          {
+            "productId": "f13a0f53-da0b-494f-8d3c-3d543f9ae8f5",
+            "name": "MacBook Pro 14\" · M3",
+            "price": 1299,
+            "qty": 1
+          }
+        ],
+        "subtotal": 1299,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 103.92,
+        "total": 1402.92,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "cashReceived": 1403,
+        "changeDue": 0.08,
+        "createdAt": 1786852092000
+      },
+      {
+        "id": "ffa4cb22-9151-4196-bb49-8a4b92312172",
+        "receiptNo": "1005",
+        "items": [
+          {
+            "productId": "4d7b7216-1480-4982-88cf-1f123b961e6d",
+            "name": "Mario Kart 8 Deluxe",
+            "price": 34.99,
+            "qty": 1
+          },
+          {
+            "productId": "5d6d5763-0987-4b6b-b0ec-53a5b4f1ac12",
+            "name": "Galaxy Watch 6 · 40mm",
+            "price": 129,
+            "qty": 2
+          },
+          {
+            "productId": "21b49821-eb1e-46f0-8611-4c2dadcffe4c",
+            "name": "Pixel 7 · 128GB",
+            "price": 229.99,
+            "qty": 1
+          },
+          {
+            "productId": "496b9857-1f63-40f8-b966-ac82f8200d2d",
+            "name": "Sony WH-1000XM4",
+            "price": 199,
+            "qty": 3
+          }
+        ],
+        "subtotal": 1119.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 89.5984,
+        "total": 1209.58,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "createdAt": 1786867678000
+      },
+      {
+        "id": "8e3338ba-b0bf-44ed-b338-a502f80ac4cf",
+        "receiptNo": "1006",
+        "items": [
+          {
+            "productId": "5d6d5763-0987-4b6b-b0ec-53a5b4f1ac12",
+            "name": "Galaxy Watch 6 · 40mm",
+            "price": 129,
+            "qty": 1
+          },
+          {
+            "productId": "8aaa43e9-9fdc-4afd-9f59-d9133979b603",
+            "name": "Galaxy S23 · 256GB",
+            "price": 389.99,
+            "qty": 1
+          },
+          {
+            "productId": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+            "name": "Halo Infinite",
+            "price": 14.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 563.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 45.116800000000005,
+        "total": 609.08,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 610,
+        "changeDue": 0.92,
+        "createdAt": 1786987718000
+      },
+      {
+        "id": "498a5e00-6a51-4222-912c-92ec9f038571",
+        "receiptNo": "1007",
+        "items": [
+          {
+            "productId": "8aaa43e9-9fdc-4afd-9f59-d9133979b603",
+            "name": "Galaxy S23 · 256GB",
+            "price": 389.99,
+            "qty": 2
+          },
+          {
+            "productId": "2ebb8ff3-a5e0-405a-84ea-5f75fe506267",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 769,
+            "qty": 2
+          }
+        ],
+        "subtotal": 2317.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 185.4384,
+        "total": 2503.42,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1786994518000
+      },
+      {
+        "id": "cc72744d-5095-4ce7-b4ed-1f1f18a1b1af",
+        "receiptNo": "1008",
+        "items": [
+          {
+            "productId": "4d7b7216-1480-4982-88cf-1f123b961e6d",
+            "name": "Mario Kart 8 Deluxe",
+            "price": 34.99,
+            "qty": 1
+          },
+          {
+            "productId": "82e85511-e5d1-4d29-aa70-ba49f6a61902",
+            "name": "JBL Flip 6",
+            "price": 89,
+            "qty": 1
+          }
+        ],
+        "subtotal": 123.99000000000001,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 9.919200000000002,
+        "total": 133.91,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "cashReceived": 134,
+        "changeDue": 0.09,
+        "createdAt": 1787036845000
+      },
+      {
+        "id": "8ec81596-8cb5-44dd-8558-d1eab2228c67",
+        "receiptNo": "1009",
+        "items": [
+          {
+            "productId": "5d6d5763-0987-4b6b-b0ec-53a5b4f1ac12",
+            "name": "Galaxy Watch 6 · 40mm",
+            "price": 129,
+            "qty": 3
+          }
+        ],
+        "subtotal": 387,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 30.96,
+        "total": 417.96,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "cashReceived": 418,
+        "changeDue": 0.04,
+        "createdAt": 1787055094000
+      },
+      {
+        "id": "c87811d9-937a-4738-924f-fcbf82edb728",
+        "receiptNo": "1010",
+        "items": [
+          {
+            "productId": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+            "name": "Halo Infinite",
+            "price": 14.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 14.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 1.1992,
+        "total": 16.19,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "cashReceived": 17,
+        "changeDue": 0.81,
+        "createdAt": 1787065732000
+      },
+      {
+        "id": "5ff2a6ef-22b2-4625-b2c7-4be194b07762",
+        "receiptNo": "1011",
+        "items": [
+          {
+            "productId": "5d6d5763-0987-4b6b-b0ec-53a5b4f1ac12",
+            "name": "Galaxy Watch 6 · 40mm",
+            "price": 129,
+            "qty": 3
+          },
+          {
+            "productId": "f13a0f53-da0b-494f-8d3c-3d543f9ae8f5",
+            "name": "MacBook Pro 14\" · M3",
+            "price": 1299,
+            "qty": 3
+          },
+          {
+            "productId": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 619,
+            "qty": 1
+          }
+        ],
+        "subtotal": 4903,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 392.24,
+        "total": 5295.24,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "createdAt": 1787112764000
+      },
+      {
+        "id": "af250727-7caf-4747-bd87-f5115de977a5",
+        "receiptNo": "1012",
+        "items": [
+          {
+            "productId": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+            "name": "Halo Infinite",
+            "price": 14.99,
+            "qty": 1
+          },
+          {
+            "productId": "67ebec14-ff2d-4f82-87c8-40e04287a967",
+            "name": "Oppenheimer",
+            "price": 19.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 74.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 5.9967999999999995,
+        "total": 80.96,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1787186127000
+      },
+      {
+        "id": "976284e1-65e4-4a11-92c4-5fbe9519d590",
+        "receiptNo": "1013",
+        "items": [
+          {
+            "productId": "2ffce924-0711-43c9-9e7a-ce793536e92d",
+            "name": "Canon EOS R50",
+            "price": 529,
+            "qty": 2
+          }
+        ],
+        "subtotal": 1058,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 84.64,
+        "total": 1142.64,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "cashReceived": 1143,
+        "changeDue": 0.36,
+        "createdAt": 1787213673000
+      },
+      {
+        "id": "1d850a53-1e56-4695-8151-8289374b3f17",
+        "receiptNo": "1014",
+        "items": [
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 3
+          },
+          {
+            "productId": "4db03ef9-5761-42b4-bccc-2422f081c64e",
+            "name": "iPhone 15 · 128GB",
+            "price": 349.99,
+            "qty": 2
+          },
+          {
+            "productId": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 619,
+            "qty": 3
+          }
+        ],
+        "subtotal": 2613.95,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 209.11599999999999,
+        "total": 2823.07,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "cashReceived": 2824,
+        "changeDue": 0.93,
+        "createdAt": 1787241470000
+      },
+      {
+        "id": "288aa9f5-0fd3-4e43-8386-41d80a33fc04",
+        "receiptNo": "1015",
+        "items": [
+          {
+            "productId": "2ffce924-0711-43c9-9e7a-ce793536e92d",
+            "name": "Canon EOS R50",
+            "price": 529,
+            "qty": 3
+          },
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 2
+          }
+        ],
+        "subtotal": 2145,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 171.6,
+        "total": 2316.6,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "createdAt": 1787259850000
+      },
+      {
+        "id": "6eb4b879-e8a9-47fb-b2a6-818d77b22cc8",
+        "receiptNo": "1016",
+        "items": [
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 3
+          }
+        ],
+        "subtotal": 837,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 66.96000000000001,
+        "total": 903.96,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1787339406000
+      },
+      {
+        "id": "94b47a08-9caf-4d77-9be7-47b678c3e599",
+        "receiptNo": "1017",
+        "items": [
+          {
+            "productId": "2ffce924-0711-43c9-9e7a-ce793536e92d",
+            "name": "Canon EOS R50",
+            "price": 529,
+            "qty": 3
+          }
+        ],
+        "subtotal": 1587,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 126.96000000000001,
+        "total": 1713.96,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "createdAt": 1787372744000
+      },
+      {
+        "id": "2f6b5815-c4cd-442e-8ae8-96e1ebc513b1",
+        "receiptNo": "1018",
+        "items": [
+          {
+            "productId": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+            "name": "Halo Infinite",
+            "price": 14.99,
+            "qty": 1
+          },
+          {
+            "productId": "31eaf2eb-ee50-496b-b2e8-a364fa1267b3",
+            "name": "Bose QC45",
+            "price": 169,
+            "qty": 1
+          }
+        ],
+        "subtotal": 183.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 14.7192,
+        "total": 198.71,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 199,
+        "changeDue": 0.29,
+        "createdAt": 1787393074000
+      },
+      {
+        "id": "5b9fbc0d-95ae-44a0-b195-28c525aabfb0",
+        "receiptNo": "1019",
+        "items": [
+          {
+            "productId": "6f42035b-551b-4239-9867-d0edddecf5e0",
+            "name": "Puss in Boots: The Last Wish",
+            "price": 11.99,
+            "qty": 3
+          },
+          {
+            "productId": "98cf3f30-9b52-4b41-b5ce-b458ece9352d",
+            "name": "Super Mario Odyssey",
+            "price": 24.99,
+            "qty": 2
+          }
+        ],
+        "subtotal": 85.94999999999999,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 6.8759999999999994,
+        "total": 92.83,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "createdAt": 1787429495000
+      },
+      {
+        "id": "b2908d04-295e-41e9-8d83-46c99366fbeb",
+        "receiptNo": "1020",
+        "items": [
+          {
+            "productId": "78fec03a-c615-4aba-aae7-1e7158f2653e",
+            "name": "Zelda: Tears of the Kingdom",
+            "price": 39.99,
+            "qty": 2
+          },
+          {
+            "productId": "496b9857-1f63-40f8-b966-ac82f8200d2d",
+            "name": "Sony WH-1000XM4",
+            "price": 199,
+            "qty": 3
+          }
+        ],
+        "subtotal": 676.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 54.1584,
+        "total": 731.14,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "createdAt": 1787442330000
+      },
+      {
+        "id": "307ebd50-c40d-4520-bd15-dd7695420f5b",
+        "receiptNo": "1021",
+        "items": [
+          {
+            "productId": "f13a0f53-da0b-494f-8d3c-3d543f9ae8f5",
+            "name": "MacBook Pro 14\" · M3",
+            "price": 1299,
+            "qty": 1
+          },
+          {
+            "productId": "bb116fdf-4911-4710-99bc-a6584d7d60f3",
+            "name": "iPad 10th gen · 64GB",
+            "price": 319,
+            "qty": 2
+          },
+          {
+            "productId": "51fda429-6fb3-45a1-9261-ddd7d0a4514e",
+            "name": "AirPods Pro 2",
+            "price": 179,
+            "qty": 2
+          }
+        ],
+        "subtotal": 2295,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 183.6,
+        "total": 2478.6,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "createdAt": 1787442663000
+      },
+      {
+        "id": "331820c9-b8fb-43a5-9b10-4c1c8b4e91cb",
+        "receiptNo": "1022",
+        "items": [
+          {
+            "productId": "e9a48a06-11b9-48a5-8d80-90c65d79b85e",
+            "name": "Barbie",
+            "price": 13.99,
+            "qty": 3
+          },
+          {
+            "productId": "7abcf5ef-8dc5-4817-b6d2-991b396686cf",
+            "name": "Black Panther: Wakanda Forever",
+            "price": 8.99,
+            "qty": 2
+          },
+          {
+            "productId": "67ebec14-ff2d-4f82-87c8-40e04287a967",
+            "name": "Oppenheimer",
+            "price": 19.99,
+            "qty": 2
+          },
+          {
+            "productId": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 619,
+            "qty": 3
+          }
+        ],
+        "subtotal": 1956.93,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 156.55440000000002,
+        "total": 2113.48,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "createdAt": 1787481122000
+      },
+      {
+        "id": "cd00e032-afc1-4053-828d-80597861fde6",
+        "receiptNo": "1023",
+        "items": [
+          {
+            "productId": "175cd61c-9324-4c77-bb56-14ae7bd2e676",
+            "name": "HP EliteBook 840 G8",
+            "price": 349,
+            "qty": 2
+          },
+          {
+            "productId": "82e85511-e5d1-4d29-aa70-ba49f6a61902",
+            "name": "JBL Flip 6",
+            "price": 89,
+            "qty": 2
+          },
+          {
+            "productId": "3a1a59d5-7547-4f1f-82d3-e17734bbc1a8",
+            "name": "iPhone 12 · 64GB",
+            "price": 99,
+            "qty": 2
+          }
+        ],
+        "subtotal": 1074,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 85.92,
+        "total": 1159.92,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "createdAt": 1787490742000
+      },
+      {
+        "id": "6736b791-5dba-45d4-8748-7c8fb8c53b44",
+        "receiptNo": "1024",
+        "items": [
+          {
+            "productId": "8aaa43e9-9fdc-4afd-9f59-d9133979b603",
+            "name": "Galaxy S23 · 256GB",
+            "price": 389.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 1169.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 93.5976,
+        "total": 1263.57,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1787528412000
+      },
+      {
+        "id": "f1cf7178-5797-408f-b6e6-87ff9a1eb31f",
+        "receiptNo": "1025",
+        "items": [
+          {
+            "productId": "2ffce924-0711-43c9-9e7a-ce793536e92d",
+            "name": "Canon EOS R50",
+            "price": 529,
+            "qty": 3
+          },
+          {
+            "productId": "bb116fdf-4911-4710-99bc-a6584d7d60f3",
+            "name": "iPad 10th gen · 64GB",
+            "price": 319,
+            "qty": 1
+          },
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 3
+          }
+        ],
+        "subtotal": 2743,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 219.44,
+        "total": 2962.44,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "cashReceived": 2963,
+        "changeDue": 0.56,
+        "createdAt": 1787585822000
+      },
+      {
+        "id": "43ed3184-6e72-4c21-ba12-a40f9baadca4",
+        "receiptNo": "1026",
+        "items": [
+          {
+            "productId": "78fec03a-c615-4aba-aae7-1e7158f2653e",
+            "name": "Zelda: Tears of the Kingdom",
+            "price": 39.99,
+            "qty": 3
+          },
+          {
+            "productId": "82e85511-e5d1-4d29-aa70-ba49f6a61902",
+            "name": "JBL Flip 6",
+            "price": 89,
+            "qty": 3
+          },
+          {
+            "productId": "21b49821-eb1e-46f0-8611-4c2dadcffe4c",
+            "name": "Pixel 7 · 128GB",
+            "price": 229.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 616.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 49.35680000000001,
+        "total": 666.32,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "cashReceived": 667,
+        "changeDue": 0.68,
+        "createdAt": 1787666684000
+      },
+      {
+        "id": "33969a4e-150c-4bab-8d8e-1995fac74558",
+        "receiptNo": "1027",
+        "items": [
+          {
+            "productId": "8aaa43e9-9fdc-4afd-9f59-d9133979b603",
+            "name": "Galaxy S23 · 256GB",
+            "price": 389.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 389.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 31.1992,
+        "total": 421.19,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1787689739000
+      },
+      {
+        "id": "e30f0e06-f6d2-43f2-ba18-8674e16fb33c",
+        "receiptNo": "1028",
+        "items": [
+          {
+            "productId": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+            "name": "Halo Infinite",
+            "price": 14.99,
+            "qty": 2
+          },
+          {
+            "productId": "e007c6a0-6684-4da6-946d-dd0dc0664b14",
+            "name": "Galaxy S22 · 128GB",
+            "price": 179.99,
+            "qty": 3
+          },
+          {
+            "productId": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 619,
+            "qty": 1
+          }
+        ],
+        "subtotal": 1188.95,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 95.116,
+        "total": 1284.07,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "cashReceived": 1285,
+        "changeDue": 0.93,
+        "createdAt": 1787694568000
+      },
+      {
+        "id": "370c8f66-ae1a-4563-ad8f-17bfce758f66",
+        "receiptNo": "1029",
+        "items": [
+          {
+            "productId": "67ebec14-ff2d-4f82-87c8-40e04287a967",
+            "name": "Oppenheimer",
+            "price": 19.99,
+            "qty": 2
+          },
+          {
+            "productId": "5d6d5763-0987-4b6b-b0ec-53a5b4f1ac12",
+            "name": "Galaxy Watch 6 · 40mm",
+            "price": 129,
+            "qty": 1
+          },
+          {
+            "productId": "4b5ab075-b3eb-4286-ae37-f205e046577d",
+            "name": "Glass Onion: A Knives Out Mystery",
+            "price": 12.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 181.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 14.5576,
+        "total": 196.53,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "createdAt": 1787744412000
+      },
+      {
+        "id": "62e78df0-772c-44fa-9b27-f6762bdbc546",
+        "receiptNo": "1030",
+        "items": [
+          {
+            "productId": "51fda429-6fb3-45a1-9261-ddd7d0a4514e",
+            "name": "AirPods Pro 2",
+            "price": 179,
+            "qty": 3
+          },
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 2
+          }
+        ],
+        "subtotal": 1095,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 87.60000000000001,
+        "total": 1182.6,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "createdAt": 1787814795000
+      },
+      {
+        "id": "d56feb74-9e86-46bc-9f0f-eaf6475c0935",
+        "receiptNo": "1031",
+        "items": [
+          {
+            "productId": "d46888cf-4fc4-402b-a8ef-086dee9d3968",
+            "name": "iPhone 15 · 128GB",
+            "price": 419.99,
+            "qty": 3
+          },
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 3
+          },
+          {
+            "productId": "ef2d6ee0-b5c6-4860-8018-9beba13e914f",
+            "name": "God of War Ragnarök",
+            "price": 34.99,
+            "qty": 3
+          },
+          {
+            "productId": "94487c31-db72-4449-b868-8cbd8c97b948",
+            "name": "PS5 Disc Edition",
+            "price": 349,
+            "qty": 1
+          }
+        ],
+        "subtotal": 2550.94,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 204.0752,
+        "total": 2755.02,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1787839264000
+      },
+      {
+        "id": "df85ad0e-5c7d-46bb-9814-8e2febafb4be",
+        "receiptNo": "1032",
+        "items": [
+          {
+            "productId": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+            "name": "Halo Infinite",
+            "price": 14.99,
+            "qty": 3
+          },
+          {
+            "productId": "3a1a59d5-7547-4f1f-82d3-e17734bbc1a8",
+            "name": "iPhone 12 · 64GB",
+            "price": 99,
+            "qty": 3
+          },
+          {
+            "productId": "71f44dcd-f171-49fb-91b2-844e994f8e2e",
+            "name": "DJI Mini 3",
+            "price": 339,
+            "qty": 3
+          }
+        ],
+        "subtotal": 1358.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 108.7176,
+        "total": 1467.69,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "cashReceived": 1468,
+        "changeDue": 0.31,
+        "createdAt": 1787887788000
+      },
+      {
+        "id": "779f1064-02bb-429e-9713-4aab021389fd",
+        "receiptNo": "1033",
+        "items": [
+          {
+            "productId": "12947c1c-e056-457b-91d1-182c8c2ae8fe",
+            "name": "The Batman",
+            "price": 12.99,
+            "qty": 2
+          },
+          {
+            "productId": "67ebec14-ff2d-4f82-87c8-40e04287a967",
+            "name": "Oppenheimer",
+            "price": 19.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 45.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 3.6776,
+        "total": 49.65,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "createdAt": 1787891721000
+      },
+      {
+        "id": "17b65d7f-9dcc-4213-b812-0f88748b1e27",
+        "receiptNo": "1034",
+        "items": [
+          {
+            "productId": "f13a0f53-da0b-494f-8d3c-3d543f9ae8f5",
+            "name": "MacBook Pro 14\" · M3",
+            "price": 1299,
+            "qty": 3
+          },
+          {
+            "productId": "4508070f-1034-412c-b948-24364a7220e0",
+            "name": "Spider-Man 2",
+            "price": 29.99,
+            "qty": 2
+          },
+          {
+            "productId": "bb116fdf-4911-4710-99bc-a6584d7d60f3",
+            "name": "iPad 10th gen · 64GB",
+            "price": 319,
+            "qty": 1
+          }
+        ],
+        "subtotal": 4275.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 342.0784,
+        "total": 4618.06,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "createdAt": 1787962188000
+      },
+      {
+        "id": "581e30eb-b040-4ec3-8c28-db0aadae1b65",
+        "receiptNo": "1035",
+        "items": [
+          {
+            "productId": "4db03ef9-5761-42b4-bccc-2422f081c64e",
+            "name": "iPhone 15 · 128GB",
+            "price": 349.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 1049.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 83.9976,
+        "total": 1133.97,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "createdAt": 1788014105000
+      },
+      {
+        "id": "81d911a4-a1e5-469b-81e6-41dbd2cbf0f0",
+        "receiptNo": "1036",
+        "items": [
+          {
+            "productId": "67211470-837c-441d-abc8-640434378584",
+            "name": "iPhone 13 · 128GB",
+            "price": 269.99,
+            "qty": 2
+          },
+          {
+            "productId": "2ebb8ff3-a5e0-405a-84ea-5f75fe506267",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 769,
+            "qty": 1
+          }
+        ],
+        "subtotal": 1308.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 104.7184,
+        "total": 1413.7,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "cashReceived": 1414,
+        "changeDue": 0.3,
+        "createdAt": 1788020987000
+      },
+      {
+        "id": "147ffc8f-18b9-4899-8245-7e24c4a83388",
+        "receiptNo": "1037",
+        "items": [
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 18.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 1.5191999999999999,
+        "total": 20.51,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "createdAt": 1788035059000
+      },
+      {
+        "id": "78ecc15b-4d12-460d-b8f3-f9f1a81e5c10",
+        "receiptNo": "1038",
+        "items": [
+          {
+            "productId": "175cd61c-9324-4c77-bb56-14ae7bd2e676",
+            "name": "HP EliteBook 840 G8",
+            "price": 349,
+            "qty": 1
+          },
+          {
+            "productId": "f2682674-d6dd-45f1-9651-6c7eaf35f1f8",
+            "name": "Halo Infinite",
+            "price": 14.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 363.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 29.119200000000003,
+        "total": 393.11,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "cashReceived": 394,
+        "changeDue": 0.89,
+        "createdAt": 1788110675000
+      },
+      {
+        "id": "4135bb6a-9a29-4555-be90-106e15b6a814",
+        "receiptNo": "1039",
+        "items": [
+          {
+            "productId": "45fc1de2-5cb4-42ad-9761-45c22a75857d",
+            "name": "Guardians of the Galaxy Vol. 3",
+            "price": 14.99,
+            "qty": 2
+          },
+          {
+            "productId": "f9f7675e-277c-4f6c-9267-7bea972df93f",
+            "name": "Animal Crossing: New Horizons",
+            "price": 29.99,
+            "qty": 1
+          },
+          {
+            "productId": "5f6d6749-84e4-4c8f-83a9-ffab267524a3",
+            "name": "Everything Everywhere All at Once",
+            "price": 11.99,
+            "qty": 3
+          },
+          {
+            "productId": "6f42035b-551b-4239-9867-d0edddecf5e0",
+            "name": "Puss in Boots: The Last Wish",
+            "price": 11.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 131.91,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 10.5528,
+        "total": 142.46,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "createdAt": 1788122298000
+      },
+      {
+        "id": "4b8772d1-0e15-4893-8b63-fab15f1bb6af",
+        "receiptNo": "1040",
+        "items": [
+          {
+            "productId": "d46888cf-4fc4-402b-a8ef-086dee9d3968",
+            "name": "iPhone 15 · 128GB",
+            "price": 419.99,
+            "qty": 2
+          },
+          {
+            "productId": "2ffce924-0711-43c9-9e7a-ce793536e92d",
+            "name": "Canon EOS R50",
+            "price": 529,
+            "qty": 1
+          },
+          {
+            "productId": "bb116fdf-4911-4710-99bc-a6584d7d60f3",
+            "name": "iPad 10th gen · 64GB",
+            "price": 319,
+            "qty": 1
+          },
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 2
+          }
+        ],
+        "subtotal": 2245.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 179.6784,
+        "total": 2425.66,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "createdAt": 1788137150000
+      },
+      {
+        "id": "94a158cf-8e1d-4f41-a5c3-18b0467420b0",
+        "receiptNo": "1041",
+        "items": [
+          {
+            "productId": "e007c6a0-6684-4da6-946d-dd0dc0664b14",
+            "name": "Galaxy S22 · 128GB",
+            "price": 179.99,
+            "qty": 1
+          },
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 3
+          },
+          {
+            "productId": "5f6d6749-84e4-4c8f-83a9-ffab267524a3",
+            "name": "Everything Everywhere All at Once",
+            "price": 11.99,
+            "qty": 2
+          }
+        ],
+        "subtotal": 260.94,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 20.8752,
+        "total": 281.82,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 282,
+        "changeDue": 0.18,
+        "createdAt": 1788184897000
+      },
+      {
+        "id": "e25d89c2-474d-4bca-a8c4-3d5deca63277",
+        "receiptNo": "1042",
+        "items": [
+          {
+            "productId": "45fc1de2-5cb4-42ad-9761-45c22a75857d",
+            "name": "Guardians of the Galaxy Vol. 3",
+            "price": 14.99,
+            "qty": 1
+          },
+          {
+            "productId": "7abcf5ef-8dc5-4817-b6d2-991b396686cf",
+            "name": "Black Panther: Wakanda Forever",
+            "price": 8.99,
+            "qty": 3
+          },
+          {
+            "productId": "78fec03a-c615-4aba-aae7-1e7158f2653e",
+            "name": "Zelda: Tears of the Kingdom",
+            "price": 39.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 161.93,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 12.954400000000001,
+        "total": 174.88,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "createdAt": 1788191814000
+      },
+      {
+        "id": "438f6a32-fcdd-4d2b-8990-9cf9bcd821f9",
+        "receiptNo": "1043",
+        "items": [
+          {
+            "productId": "aa6921f2-ab37-46f0-9dc5-d6ab3a1c4b7a",
+            "name": "Xbox Series S",
+            "price": 189,
+            "qty": 1
+          },
+          {
+            "productId": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 619,
+            "qty": 2
+          }
+        ],
+        "subtotal": 1427,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 114.16,
+        "total": 1541.16,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "createdAt": 1788196688000
+      },
+      {
+        "id": "5dc67c86-3538-4641-b6a3-c978ddf04fbf",
+        "receiptNo": "1044",
+        "items": [
+          {
+            "productId": "51fda429-6fb3-45a1-9261-ddd7d0a4514e",
+            "name": "AirPods Pro 2",
+            "price": 179,
+            "qty": 2
+          },
+          {
+            "productId": "e9a48a06-11b9-48a5-8d80-90c65d79b85e",
+            "name": "Barbie",
+            "price": 13.99,
+            "qty": 1
+          },
+          {
+            "productId": "78fec03a-c615-4aba-aae7-1e7158f2653e",
+            "name": "Zelda: Tears of the Kingdom",
+            "price": 39.99,
+            "qty": 2
+          },
+          {
+            "productId": "d46888cf-4fc4-402b-a8ef-086dee9d3968",
+            "name": "iPhone 15 · 128GB",
+            "price": 419.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 871.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 69.7568,
+        "total": 941.72,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 942,
+        "changeDue": 0.28,
+        "createdAt": 1788209370000
+      },
+      {
+        "id": "b84d45cb-ac8f-4b75-870f-667f6e64ab5f",
+        "receiptNo": "1045",
+        "items": [
+          {
+            "productId": "31eaf2eb-ee50-496b-b2e8-a364fa1267b3",
+            "name": "Bose QC45",
+            "price": 169,
+            "qty": 3
+          }
+        ],
+        "subtotal": 507,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 40.56,
+        "total": 547.56,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "cashReceived": 548,
+        "changeDue": 0.44,
+        "createdAt": 1788217573000
+      },
+      {
+        "id": "bb831a6b-9414-45d0-b1d6-3d90ff3633a4",
+        "receiptNo": "1046",
+        "items": [
+          {
+            "productId": "67211470-837c-441d-abc8-640434378584",
+            "name": "iPhone 13 · 128GB",
+            "price": 269.99,
+            "qty": 3
+          },
+          {
+            "productId": "aa6921f2-ab37-46f0-9dc5-d6ab3a1c4b7a",
+            "name": "Xbox Series S",
+            "price": 189,
+            "qty": 3
+          },
+          {
+            "productId": "3afa93c4-3f36-4ba7-b587-109174a5d94e",
+            "name": "Nintendo Switch OLED",
+            "price": 229,
+            "qty": 3
+          },
+          {
+            "productId": "088c781e-e94c-4d6f-9188-af8ce90be366",
+            "name": "The Dark Knight",
+            "price": 7.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 2071.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 165.7568,
+        "total": 2237.72,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "createdAt": 1788231778000
+      },
+      {
+        "id": "236bbfcd-b775-4b5e-a00f-d32ca31d29f8",
+        "receiptNo": "1047",
+        "items": [
+          {
+            "productId": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 619,
+            "qty": 1
+          },
+          {
+            "productId": "e007c6a0-6684-4da6-946d-dd0dc0664b14",
+            "name": "Galaxy S22 · 128GB",
+            "price": 179.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 798.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 63.919200000000004,
+        "total": 862.91,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "createdAt": 1788261981000
+      },
+      {
+        "id": "cd308e7f-81b1-45a7-949a-272854a2eac7",
+        "receiptNo": "1048",
+        "items": [
+          {
+            "productId": "3a82984e-6694-4db7-a96b-fcbcdb580cad",
+            "name": "Dune: Part Two",
+            "price": 21.99,
+            "qty": 3
+          },
+          {
+            "productId": "6f42035b-551b-4239-9867-d0edddecf5e0",
+            "name": "Puss in Boots: The Last Wish",
+            "price": 11.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 101.94,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 8.1552,
+        "total": 110.1,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 111,
+        "changeDue": 0.9,
+        "createdAt": 1788274358000
+      },
+      {
+        "id": "ff5c6a06-169a-4b6b-aedd-382b0feeebef",
+        "receiptNo": "1049",
+        "items": [
+          {
+            "productId": "5d6d5763-0987-4b6b-b0ec-53a5b4f1ac12",
+            "name": "Galaxy Watch 6 · 40mm",
+            "price": 129,
+            "qty": 1
+          }
+        ],
+        "subtotal": 129,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 10.32,
+        "total": 139.32,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "createdAt": 1788299325000
+      },
+      {
+        "id": "2c42db54-a7a0-4c3b-8592-0681781986c1",
+        "receiptNo": "1050",
+        "items": [
+          {
+            "productId": "2ffce924-0711-43c9-9e7a-ce793536e92d",
+            "name": "Canon EOS R50",
+            "price": 529,
+            "qty": 2
+          }
+        ],
+        "subtotal": 1058,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 84.64,
+        "total": 1142.64,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 1143,
+        "changeDue": 0.36,
+        "createdAt": 1788306990000
+      },
+      {
+        "id": "67298604-bac7-4f0f-a7ef-5c1b8ff00eba",
+        "receiptNo": "1051",
+        "items": [
+          {
+            "productId": "aa6921f2-ab37-46f0-9dc5-d6ab3a1c4b7a",
+            "name": "Xbox Series S",
+            "price": 189,
+            "qty": 1
+          },
+          {
+            "productId": "4d7b7216-1480-4982-88cf-1f123b961e6d",
+            "name": "Mario Kart 8 Deluxe",
+            "price": 34.99,
+            "qty": 1
+          },
+          {
+            "productId": "78fec03a-c615-4aba-aae7-1e7158f2653e",
+            "name": "Zelda: Tears of the Kingdom",
+            "price": 39.99,
+            "qty": 2
+          }
+        ],
+        "subtotal": 303.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 24.317600000000002,
+        "total": 328.29,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 329,
+        "changeDue": 0.71,
+        "createdAt": 1788334520000
+      },
+      {
+        "id": "92ff955f-db3c-438b-a824-222855469677",
+        "receiptNo": "1052",
+        "items": [
+          {
+            "productId": "bb116fdf-4911-4710-99bc-a6584d7d60f3",
+            "name": "iPad 10th gen · 64GB",
+            "price": 319,
+            "qty": 1
+          }
+        ],
+        "subtotal": 319,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 25.52,
+        "total": 344.52,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "createdAt": 1788360206000
+      },
+      {
+        "id": "c76d9bef-c23d-461e-8930-ee6b26a4a83b",
+        "receiptNo": "1053",
+        "items": [
+          {
+            "productId": "2ebb8ff3-a5e0-405a-84ea-5f75fe506267",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 769,
+            "qty": 2
+          },
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 3
+          }
+        ],
+        "subtotal": 2375,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 190,
+        "total": 2565,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "cashReceived": 2565,
+        "changeDue": 0,
+        "createdAt": 1788405163000
+      },
+      {
+        "id": "ed68dcaa-28c6-4f07-9cc9-3983d9695568",
+        "receiptNo": "1054",
+        "items": [
+          {
+            "productId": "98cf3f30-9b52-4b41-b5ce-b458ece9352d",
+            "name": "Super Mario Odyssey",
+            "price": 24.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 24.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 1.9991999999999999,
+        "total": 26.99,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 27,
+        "changeDue": 0.01,
+        "createdAt": 1788410894000
+      },
+      {
+        "id": "13da84c7-a1b4-48dc-83d4-7f934529776c",
+        "receiptNo": "1055",
+        "items": [
+          {
+            "productId": "67ebec14-ff2d-4f82-87c8-40e04287a967",
+            "name": "Oppenheimer",
+            "price": 19.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 59.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 4.7976,
+        "total": 64.77,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 65,
+        "changeDue": 0.23,
+        "createdAt": 1788452416000
+      },
+      {
+        "id": "502a7fed-6546-4c65-8b04-f3429db696a4",
+        "receiptNo": "1056",
+        "items": [
+          {
+            "productId": "b56014c3-fdf3-48ae-8c3f-7b293e7bfd29",
+            "name": "Spider-Man: No Way Home",
+            "price": 14.99,
+            "qty": 2
+          }
+        ],
+        "subtotal": 29.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 2.3984,
+        "total": 32.38,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "cashReceived": 33,
+        "changeDue": 0.62,
+        "createdAt": 1788467111000
+      },
+      {
+        "id": "dd09790d-2231-42fa-8163-5e72114bf9e2",
+        "receiptNo": "1057",
+        "items": [
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 18.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 1.5191999999999999,
+        "total": 20.51,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "cashReceived": 21,
+        "changeDue": 0.49,
+        "createdAt": 1788495235000
+      },
+      {
+        "id": "4916f498-9436-4ed3-baea-d0a870a09c47",
+        "receiptNo": "1058",
+        "items": [
+          {
+            "productId": "e007c6a0-6684-4da6-946d-dd0dc0664b14",
+            "name": "Galaxy S22 · 128GB",
+            "price": 179.99,
+            "qty": 2
+          }
+        ],
+        "subtotal": 359.98,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 28.7984,
+        "total": 388.78,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "cashReceived": 389,
+        "changeDue": 0.22,
+        "createdAt": 1788499190000
+      },
+      {
+        "id": "f89a06df-de5b-405e-958c-9b85f6163118",
+        "receiptNo": "1059",
+        "items": [
+          {
+            "productId": "bb116fdf-4911-4710-99bc-a6584d7d60f3",
+            "name": "iPad 10th gen · 64GB",
+            "price": 319,
+            "qty": 1
+          },
+          {
+            "productId": "3a1a59d5-7547-4f1f-82d3-e17734bbc1a8",
+            "name": "iPhone 12 · 64GB",
+            "price": 99,
+            "qty": 1
+          },
+          {
+            "productId": "5c246d93-763b-4787-81db-7e17349989c2",
+            "name": "Elden Ring",
+            "price": 27.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 445.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 35.6792,
+        "total": 481.67,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "createdAt": 1788512252000
+      },
+      {
+        "id": "068b737e-5d00-4fc0-b875-df2d3fcae66f",
+        "receiptNo": "1060",
+        "items": [
+          {
+            "productId": "d46888cf-4fc4-402b-a8ef-086dee9d3968",
+            "name": "iPhone 15 · 128GB",
+            "price": 419.99,
+            "qty": 2
+          },
+          {
+            "productId": "67211470-837c-441d-abc8-640434378584",
+            "name": "iPhone 13 · 128GB",
+            "price": 269.99,
+            "qty": 2
+          },
+          {
+            "productId": "94487c31-db72-4449-b868-8cbd8c97b948",
+            "name": "PS5 Disc Edition",
+            "price": 349,
+            "qty": 2
+          }
+        ],
+        "subtotal": 2077.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 166.23680000000002,
+        "total": 2244.2,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1788533171000
+      },
+      {
+        "id": "d327d9f8-a5eb-4a9d-b023-661b6a9cb2af",
+        "receiptNo": "1061",
+        "items": [
+          {
+            "productId": "71f44dcd-f171-49fb-91b2-844e994f8e2e",
+            "name": "DJI Mini 3",
+            "price": 339,
+            "qty": 3
+          },
+          {
+            "productId": "12947c1c-e056-457b-91d1-182c8c2ae8fe",
+            "name": "The Batman",
+            "price": 12.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 1029.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 82.39920000000001,
+        "total": 1112.39,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "createdAt": 1788539534000
+      },
+      {
+        "id": "d1aa8b46-bf61-4719-985a-4cf294522c97",
+        "receiptNo": "1062",
+        "items": [
+          {
+            "productId": "4db03ef9-5761-42b4-bccc-2422f081c64e",
+            "name": "iPhone 15 · 128GB",
+            "price": 349.99,
+            "qty": 3
+          },
+          {
+            "productId": "45fc1de2-5cb4-42ad-9761-45c22a75857d",
+            "name": "Guardians of the Galaxy Vol. 3",
+            "price": 14.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 1094.94,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 87.5952,
+        "total": 1182.54,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "createdAt": 1788562996000
+      },
+      {
+        "id": "57600b08-2f35-4fbd-a773-f5b5463f98a3",
+        "receiptNo": "1063",
+        "items": [
+          {
+            "productId": "4b5ab075-b3eb-4286-ae37-f205e046577d",
+            "name": "Glass Onion: A Knives Out Mystery",
+            "price": 12.99,
+            "qty": 1
+          },
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 3
+          },
+          {
+            "productId": "5c246d93-763b-4787-81db-7e17349989c2",
+            "name": "Elden Ring",
+            "price": 27.99,
+            "qty": 3
+          },
+          {
+            "productId": "87de67fd-0b73-47bf-b6cc-d8d5c043f9d4",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 619,
+            "qty": 1
+          }
+        ],
+        "subtotal": 772.9300000000001,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 61.83440000000001,
+        "total": 834.76,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 835,
+        "changeDue": 0.24,
+        "createdAt": 1788621949000
+      },
+      {
+        "id": "00223aab-6ff8-4407-935b-52d9b91c1fc4",
+        "receiptNo": "1064",
+        "items": [
+          {
+            "productId": "1c287cdb-5525-4d34-a299-ff05bde9a56f",
+            "name": "Interstellar",
+            "price": 9.99,
+            "qty": 3
+          }
+        ],
+        "subtotal": 29.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 2.3976,
+        "total": 32.37,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "cashReceived": 33,
+        "changeDue": 0.63,
+        "createdAt": 1788684179000
+      },
+      {
+        "id": "0168f2ad-03de-4393-9b80-6848a39e20cd",
+        "receiptNo": "1065",
+        "items": [
+          {
+            "productId": "175cd61c-9324-4c77-bb56-14ae7bd2e676",
+            "name": "HP EliteBook 840 G8",
+            "price": 349,
+            "qty": 3
+          },
+          {
+            "productId": "71f44dcd-f171-49fb-91b2-844e994f8e2e",
+            "name": "DJI Mini 3",
+            "price": 339,
+            "qty": 3
+          },
+          {
+            "productId": "e007c6a0-6684-4da6-946d-dd0dc0664b14",
+            "name": "Galaxy S22 · 128GB",
+            "price": 179.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 2243.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 179.51919999999998,
+        "total": 2423.51,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "cashReceived": 2424,
+        "changeDue": 0.49,
+        "createdAt": 1788706759000
+      },
+      {
+        "id": "e67e7949-f701-4e00-91dd-773e14b7cba9",
+        "receiptNo": "1066",
+        "items": [
+          {
+            "productId": "2ebb8ff3-a5e0-405a-84ea-5f75fe506267",
+            "name": "MacBook Air M2 · 13\"",
+            "price": 769,
+            "qty": 3
+          },
+          {
+            "productId": "5f6d6749-84e4-4c8f-83a9-ffab267524a3",
+            "name": "Everything Everywhere All at Once",
+            "price": 11.99,
+            "qty": 1
+          },
+          {
+            "productId": "4b5ab075-b3eb-4286-ae37-f205e046577d",
+            "name": "Glass Onion: A Knives Out Mystery",
+            "price": 12.99,
+            "qty": 1
+          },
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 2
+          }
+        ],
+        "subtotal": 2369.9599999999996,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 189.59679999999997,
+        "total": 2559.56,
+        "kind": "sale",
+        "paymentMethod": "card",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "createdAt": 1788727597000
+      },
+      {
+        "id": "e1a2b9dd-3f22-4a28-a8de-d257e13ff759",
+        "receiptNo": "1067",
+        "items": [
+          {
+            "productId": "f13a0f53-da0b-494f-8d3c-3d543f9ae8f5",
+            "name": "MacBook Pro 14\" · M3",
+            "price": 1299,
+            "qty": 1
+          },
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 2
+          },
+          {
+            "productId": "ef2d6ee0-b5c6-4860-8018-9beba13e914f",
+            "name": "God of War Ragnarök",
+            "price": 34.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 1371.97,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 109.75760000000001,
+        "total": 1481.73,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "cashReceived": 1482,
+        "changeDue": 0.27,
+        "createdAt": 1788739168000
+      },
+      {
+        "id": "18ef0832-8f16-4abb-bd43-a6d1e9cfba86",
+        "receiptNo": "1068",
+        "items": [
+          {
+            "productId": "8aaa43e9-9fdc-4afd-9f59-d9133979b603",
+            "name": "Galaxy S23 · 256GB",
+            "price": 389.99,
+            "qty": 1
+          },
+          {
+            "productId": "7642ed0d-55a7-489c-9f4e-d6e2d0f2c695",
+            "name": "Apple Watch S9 · 45mm",
+            "price": 279,
+            "qty": 3
+          },
+          {
+            "productId": "94487c31-db72-4449-b868-8cbd8c97b948",
+            "name": "PS5 Disc Edition",
+            "price": 349,
+            "qty": 3
+          }
+        ],
+        "subtotal": 2273.99,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 181.9192,
+        "total": 2455.91,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "createdAt": 1788762583000
+      },
+      {
+        "id": "52ee2c17-ed26-4c37-9016-69fe10a141af",
+        "receiptNo": "1069",
+        "items": [
+          {
+            "productId": "e007c6a0-6684-4da6-946d-dd0dc0664b14",
+            "name": "Galaxy S22 · 128GB",
+            "price": 179.99,
+            "qty": 3
+          },
+          {
+            "productId": "088c781e-e94c-4d6f-9188-af8ce90be366",
+            "name": "The Dark Knight",
+            "price": 7.99,
+            "qty": 1
+          }
+        ],
+        "subtotal": 547.96,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 43.836800000000004,
+        "total": 591.8,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "afd9b98b-107d-431a-b16f-e33d33fa57a0",
+        "cashReceived": 592,
+        "changeDue": 0.2,
+        "createdAt": 1788867037000
+      },
+      {
+        "id": "42f2d320-0328-46be-9536-4822c4d33f37",
+        "receiptNo": "1070",
+        "items": [
+          {
+            "productId": "496b9857-1f63-40f8-b966-ac82f8200d2d",
+            "name": "Sony WH-1000XM4",
+            "price": 199,
+            "qty": 3
+          }
+        ],
+        "subtotal": 597,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 47.76,
+        "total": 644.76,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "4470e0ba-b006-447b-a437-e7d4c1560e56",
+        "cashReceived": 645,
+        "changeDue": 0.24,
+        "createdAt": 1788905722000
+      },
+      {
+        "id": "f88f473b-c97e-472d-a9f6-66952b6064e2",
+        "receiptNo": "1071",
+        "items": [
+          {
+            "productId": "ef2d6ee0-b5c6-4860-8018-9beba13e914f",
+            "name": "God of War Ragnarök",
+            "price": 34.99,
+            "qty": 2
+          },
+          {
+            "productId": "df2cbe6b-a8b0-45dd-801f-a7acc323e632",
+            "name": "John Wick: Chapter 4",
+            "price": 18.99,
+            "qty": 2
+          },
+          {
+            "productId": "5c246d93-763b-4787-81db-7e17349989c2",
+            "name": "Elden Ring",
+            "price": 27.99,
+            "qty": 2
+          },
+          {
+            "productId": "175cd61c-9324-4c77-bb56-14ae7bd2e676",
+            "name": "HP EliteBook 840 G8",
+            "price": 349,
+            "qty": 2
+          }
+        ],
+        "subtotal": 861.94,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 68.9552,
+        "total": 930.9,
+        "kind": "sale",
+        "paymentMethod": "cash",
+        "customerId": "50b6f6db-bf4f-4f11-ab47-fac7fff6a9fb",
+        "cashReceived": 931,
+        "changeDue": 0.1,
+        "createdAt": 1788922579000
+      },
+      {
+        "id": "7f8e5994-3b5d-4a31-ba86-7042ad38053c",
+        "receiptNo": "1072",
+        "items": [
+          {
+            "productId": "71f44dcd-f171-49fb-91b2-844e994f8e2e",
+            "name": "DJI Mini 3",
+            "price": 339,
+            "qty": 3
+          },
+          {
+            "productId": "82e85511-e5d1-4d29-aa70-ba49f6a61902",
+            "name": "JBL Flip 6",
+            "price": 89,
+            "qty": 2
+          },
+          {
+            "productId": "175cd61c-9324-4c77-bb56-14ae7bd2e676",
+            "name": "HP EliteBook 840 G8",
+            "price": 349,
+            "qty": 3
+          }
+        ],
+        "subtotal": 2242,
+        "discount": 0,
+        "taxRate": 0.08,
+        "taxAmount": 179.36,
+        "total": 2421.36,
+        "kind": "sale",
+        "paymentMethod": "upi",
+        "customerId": "3b318f58-3a59-4f8c-88b9-ebdd0a203bf7",
+        "createdAt": 1788930840000
+      }
+    ],
+    "vouchers": [],
+    "knowledge": [
+      {
+        "id": "14bcdb92-ddf4-40bc-bc93-2f6370dd3ebf",
+        "title": "Store policies",
+        "content": "We sell refurbished electronics only — no new items. Every device is inspected, tested, and given a condition grade from A to F:\n- Grade A: Excellent, like new\n- Grade B: Very good, light wear\n- Grade C: Good, visible wear, fully tested\n- Grade D: Fair, noticeable marks, fully working\n- Grade E: Poor, heavy wear, fully working\n- Grade F: For parts, not fully tested\n\nBuy: sell any device with a valid grade. We grade items on intake before they can be listed.\nSell: customers can buy any in-stock graded device from the POS.\nExchange: customers can trade in a working device and get store credit toward another item. Select the customer at checkout and choose Store Credit as the payment method — the trade-in value is added to their balance.\n\nReturns: devices can be returned within 30 days with the original receipt. All sales include a 12-month warranty.",
+        "updatedAt": 1788941202050
+      },
+      {
+        "id": "a605f447-27b4-4155-ba46-e9eff18614cb",
+        "title": "Daily operations",
+        "content": "Start of day: check the Dashboard for low-stock alerts and restock anything below its threshold using the Inventory page.\n\nGrading intake: when a device comes in, test it (screen, battery, buttons, camera), assign a grade A-F, then add it as a product with that grade and a refurbished price.\n\nCheckout: tap products to add them to the cart, adjust quantities, attach a customer if paying by store credit or processing an exchange, then choose a payment method and press Charge. A receipt prints automatically and can be reprinted from the Sales page.\n\nEnd of day: review Sales for the day's revenue and tax collected. Reconcile cash drawer against the Cash payments shown in the report.",
+        "updatedAt": 1788941202050
+      }
+    ],
+    "skills": [
+      {
+        "id": "38e293f8-4fab-4940-8b79-bbbe6e62b903",
+        "title": "Banking Variance Analysis",
+        "enabled": true,
+        "content": "{\n  \"description\": \"Analyses cash variances at till close. Identifies which orders may have caused the discrepancy by examining refunds, change-given, buy-backs, and exchange transactions on the current till.\",\n  \"patterns\": [\n    \"variance\",\n    \"short\",\n    \"over\",\n    \"up by\",\n    \"down by\",\n    \"cash discrepancy\",\n    \"cash is\",\n    \"cash seems\",\n    \"drawer\",\n    \"till is\",\n    \"till short\",\n    \"till over\",\n    \"counted\",\n    \"banking\",\n    \"reconcil\"\n  ],\n  \"categories\": [\n    \"cash\",\n    \"refund\",\n    \"change\",\n    \"buy-back\",\n    \"exchange\"\n  ],\n  \"templates\": {\n    \"header\": \"Banking analysis for {tillName} ({timeRange}):\",\n    \"summary\": \"Expected cash: {openingFloat} (float) + {cashSalesTotal} (cash sales) = {expectedCash}.\\nCounted: {countedCash} — {varianceDirection} {varianceAmount}.\",\n    \"noVariance\": \"Your till ({tillName}) is balanced — no variance detected. Expected and counted cash both equal {expectedCash}.\",\n    \"refundLine\": \"• {receiptNo}: {itemName} — {amount} refunded in cash (reduces drawer)\",\n    \"changeLine\": \"• {receiptNo}: {itemName} — paid {paid} for {total} order ({change} change given)\",\n    \"buybackLine\": \"• {receiptNo}: Bought {itemName} from customer for {amount} (cash leaves drawer)\",\n    \"exchangeLine\": \"• {receiptNo}: Exchange — {itemName} traded in for {tradeValue} credit\",\n    \"mixedPaymentLine\": \"• {receiptNo}: {itemName} — paid {paid} via {paymentSummary} ({cashPortion} cash portion)\",\n    \"sectionRefunds\": \"Cash refunds (reduce expected cash):\",\n    \"sectionChange\": \"Change given on these orders:\",\n    \"sectionBuybacks\": \"Store buy-backs (cash leaves drawer):\",\n    \"sectionExchanges\": \"Exchange transactions:\",\n    \"sectionMixed\": \"Split payments with cash component:\",\n    \"volumeNote\": \"High cash volume ({txnCount} transactions totalling {cashTotal}) — variance may be from accumulated rounding across multiple orders rather than a single error.\",\n    \"recommendRecount\": \"Recommendation: recount your notes carefully, especially {denomination} notes. Check if any note was counted twice or if change was under/over-given.\",\n    \"recommendCheckChange\": \"Recommendation: verify the change given on the flagged orders above. Incorrect change is the most common cause of cash variance.\"\n  },\n  \"systemPrompt\": \"When a user asks about cash variance, drawer discrepancy, or till reconciliation, always list specific receipt numbers and amounts. Identify the most likely cause. Be concise and actionable.\"\n}",
+        "updatedAt": 1788941202050
+      }
+    ],
+    "tills": [
+      {
+        "id": "30ef1e2a-6a15-44ea-b7a9-e637a8a74e55",
+        "name": "Till 1 · Front",
+        "status": "closed",
+        "openingFloat": 0
+      },
+      {
+        "id": "2d217841-87c1-4718-8223-15dcb7408a12",
+        "name": "Till 2 · Counter",
+        "status": "closed",
+        "openingFloat": 0
+      }
+    ],
+    "savedCarts": [],
+    "settings": {
+      "storeName": "ReCell Electronics",
+      "tagline": "Buy · Sell · Exchange refurbished tech",
+      "currency": "$",
+      "taxRate": 8,
+      "receiptFooter": "Thank you for shopping refurbished with us!",
+      "aiEnabled": true,
+      "browserModel": "Qwen2.5-1.5B-Instruct-q4f16_1-MLC",
+      "kbEnabled": true,
+      "skillsEnabled": true
+    }
+  }
+}
