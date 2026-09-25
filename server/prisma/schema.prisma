@@ -1,0 +1,20 @@
+// Prisma schema for MEPoS dynamic server
+// Free plan: use Neon Postgres (free 0.5GB) — set DATABASE_URL to Neon connection string
+// Local dev: same Neon URL or local Postgres. For offline demo without DB, server falls back to in-memory + JSON file.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Single-row store — holds the entire POS state as JSONB.
+// This keeps the dynamic migration trivial: no per-entity tables, exact shape as zustand persist.
+model StoreState {
+  id        String   @id @default("singleton")
+  data      Json
+  updatedAt DateTime @updatedAt
+}

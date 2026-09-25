@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useStore } from './store/useStore'
+import { initServerSync } from './utils/serverSync'
 import MEPoSApp from './app/App'
 import Layout from './components/Layout'
 import Toasts from './components/Toasts'
@@ -14,6 +16,7 @@ import AiAssistant from './components/AiAssistant'
 
 export default function App() {
   const ready = useStore((s) => s.ready)
+  useEffect(() => { initServerSync() }, [])
 
   if (!ready) {
     return (
