@@ -75,7 +75,6 @@ export default function Login() {
                 {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
-            <div className="text-xs text-muted-foreground">Default: <span className="font-mono font-bold">admin / admin123</span> — change via Render env `ADMIN_USERNAME` / `ADMIN_PASSWORD`</div>
           </div>
 
           <button

@@ -87,7 +87,7 @@ async function ensureDefaultUser() {
     if (!existing) {
       const hash = await bcrypt.hash(password, 10)
       await prisma.user.create({ data: { username, passwordHash: hash } })
-      console.log(`[auth] Created default user: ${username} / ${password}`)
+      console.log(`[auth] Created default user: ${username}`)
     }
   } catch (e) {
     console.warn('[auth] ensureDefaultUser failed:', (e as Error).message)
