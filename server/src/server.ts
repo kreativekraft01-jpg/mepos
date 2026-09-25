@@ -31,9 +31,12 @@ async function initPrisma() {
     const mod = await import('@prisma/client')
     prisma = new mod.PrismaClient()
     await prisma.$connect()
-    // ensure table exists (prisma db push should have run, but be tolerant)
     usePrisma = true
     console.log('[server] Connected to Postgres via Prisma')
+    // Ensure StoreState table exists — create if first deploy without `prisma db push`
+    try {
+      await prisma.$executeRaw`CREATE TABLE IF NOT EXISTS "StoreState" ("id" TEXT PRIMARY KEY, "data" JSONB NOT NULL, "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)`
+    } catch {}
   } catch (e) {
     console.warn('[server] Prisma connect failed, falling back to JSON file:', (e as Error).message)
     try {
