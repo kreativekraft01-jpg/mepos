@@ -488,25 +488,25 @@ export function PaymentDue({
               
               {/* Receipt Options */}
               <div className="flex items-center justify-between gap-2">
-                <label className="flex items-center gap-3 cursor-pointer group flex-1">
-                  <div className={`w-5 h-5 border-2 flex items-center justify-center transition-colors ${printReceipt ? 'bg-primary border-primary' : 'border-neutral-600 group-hover:border-primary'}`}>
-                    {printReceipt && <Check className="w-3.5 h-3.5 text-black" strokeWidth={3} />}
+                <label onClick={() => !isSuccess && setPrintReceipt((v) => !v)} className="flex items-center gap-3 cursor-pointer group flex-1 select-none">
+                  <div className={`w-5 h-5 border-2 flex items-center justify-center transition-colors ${printReceipt ? 'bg-primary border-primary' : 'border-border group-hover:border-primary'}`}>
+                    {printReceipt && <Check className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={3} />}
                   </div>
-                  <span className="text-sm font-medium text-neutral-300 group-hover:text-foreground transition-colors">Print</span>
+                  <span className="text-sm font-medium text-foreground group-hover:text-foreground transition-colors">Print</span>
                 </label>
                 
-                <label className="flex items-center gap-3 cursor-pointer group flex-1">
-                  <div className={`w-5 h-5 border-2 flex items-center justify-center transition-colors ${emailReceipt ? 'bg-primary border-primary' : 'border-neutral-600 group-hover:border-primary'}`}>
-                    {emailReceipt && <Check className="w-3.5 h-3.5 text-black" strokeWidth={3} />}
+                <label onClick={() => !isSuccess && setEmailReceipt((v) => !v)} className="flex items-center gap-3 cursor-pointer group flex-1 select-none">
+                  <div className={`w-5 h-5 border-2 flex items-center justify-center transition-colors ${emailReceipt ? 'bg-primary border-primary' : 'border-border group-hover:border-primary'}`}>
+                    {emailReceipt && <Check className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={3} />}
                   </div>
-                  <span className="text-sm font-medium text-neutral-300 group-hover:text-foreground transition-colors">Email</span>
+                  <span className="text-sm font-medium text-foreground group-hover:text-foreground transition-colors">Email</span>
                 </label>
                 
-                <label className="flex items-center gap-3 cursor-pointer group flex-1">
-                  <div className={`w-5 h-5 border-2 flex items-center justify-center transition-colors ${giftReceipt ? 'bg-primary border-primary' : 'border-neutral-600 group-hover:border-primary'}`}>
-                    {giftReceipt && <Check className="w-3.5 h-3.5 text-black" strokeWidth={3} />}
+                <label onClick={() => !isSuccess && setGiftReceipt((v) => !v)} className="flex items-center gap-3 cursor-pointer group flex-1 select-none">
+                  <div className={`w-5 h-5 border-2 flex items-center justify-center transition-colors ${giftReceipt ? 'bg-primary border-primary' : 'border-border group-hover:border-primary'}`}>
+                    {giftReceipt && <Check className="w-3.5 h-3.5 text-primary-foreground" strokeWidth={3} />}
                   </div>
-                  <span className="text-sm font-medium text-neutral-300 group-hover:text-foreground transition-colors">Gift</span>
+                  <span className="text-sm font-medium text-foreground group-hover:text-foreground transition-colors">Gift</span>
                 </label>
               </div>
 
