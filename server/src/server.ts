@@ -37,10 +37,25 @@ async function initPrisma() {
     await prisma.$connect()
     usePrisma = true
     console.log('[server] Connected to Postgres via Prisma')
-    // Ensure legacy table exists for migration
-    try {
-      await prisma.$executeRaw`CREATE TABLE IF NOT EXISTS "StoreState" ("id" TEXT PRIMARY KEY, "data" JSONB NOT NULL, "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)`
-    } catch {}
+    // Ensure all tables exist — covers first deploy without `prisma db push` and legacy StoreState
+    const ddl = [
+      `CREATE TABLE IF NOT EXISTS "StoreState" ("id" TEXT PRIMARY KEY, "data" JSONB NOT NULL, "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
+      `CREATE TABLE IF NOT EXISTS "User" ("id" TEXT PRIMARY KEY, "username" TEXT UNIQUE NOT NULL, "passwordHash" TEXT NOT NULL, "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
+      `CREATE TABLE IF NOT EXISTS "Category" ("id" TEXT PRIMARY KEY, "name" TEXT NOT NULL, "color" TEXT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "Customer" ("id" TEXT PRIMARY KEY, "name" TEXT NOT NULL, "phone" TEXT NOT NULL, "email" TEXT NOT NULL, "balance" DOUBLE PRECISION NOT NULL, "notes" TEXT NOT NULL, "createdAt" BIGINT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "Product" ("id" TEXT PRIMARY KEY, "sku" TEXT NOT NULL, "name" TEXT NOT NULL, "description" TEXT NOT NULL, "categoryId" TEXT, "grade" TEXT NOT NULL, "price" DOUBLE PRECISION NOT NULL, "cost" DOUBLE PRECISION NOT NULL, "buyPrice" DOUBLE PRECISION, "exchangePrice" DOUBLE PRECISION, "requiresSerial" BOOLEAN NOT NULL DEFAULT false, "stock" INTEGER NOT NULL, "lowStockThreshold" INTEGER NOT NULL, "image" TEXT NOT NULL, "createdAt" BIGINT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "Sale" ("id" TEXT PRIMARY KEY, "receiptNo" TEXT UNIQUE NOT NULL, "subtotal" DOUBLE PRECISION NOT NULL, "discount" DOUBLE PRECISION NOT NULL, "taxRate" DOUBLE PRECISION NOT NULL, "taxAmount" DOUBLE PRECISION NOT NULL, "total" DOUBLE PRECISION NOT NULL, "kind" TEXT NOT NULL, "paymentMethod" TEXT NOT NULL, "payments" JSONB, "serials" JSONB, "customerId" TEXT, "tillId" TEXT, "cashReceived" DOUBLE PRECISION, "changeDue" DOUBLE PRECISION, "refundedAt" BIGINT, "originalSaleId" TEXT, "createdAt" BIGINT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "SaleItem" ("id" TEXT PRIMARY KEY, "saleId" TEXT NOT NULL, "productId" TEXT NOT NULL, "name" TEXT NOT NULL, "price" DOUBLE PRECISION NOT NULL, "qty" INTEGER NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "GiftVoucher" ("id" TEXT PRIMARY KEY, "code" TEXT UNIQUE NOT NULL, "amount" DOUBLE PRECISION NOT NULL, "balance" DOUBLE PRECISION NOT NULL, "customerId" TEXT, "createdAt" BIGINT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "KnowledgeDoc" ("id" TEXT PRIMARY KEY, "title" TEXT NOT NULL, "content" TEXT NOT NULL, "updatedAt" BIGINT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "AiSkill" ("id" TEXT PRIMARY KEY, "title" TEXT NOT NULL, "enabled" BOOLEAN NOT NULL, "content" TEXT NOT NULL, "updatedAt" BIGINT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "Till" ("id" TEXT PRIMARY KEY, "name" TEXT NOT NULL, "status" TEXT NOT NULL, "openedAt" BIGINT, "openedBy" TEXT, "openingFloat" DOUBLE PRECISION NOT NULL, "closedAt" BIGINT, "closedBy" TEXT, "expectedCash" DOUBLE PRECISION, "countedCash" DOUBLE PRECISION, "variance" DOUBLE PRECISION, "shortageReason" TEXT, "managerTag" TEXT)`,
+      `CREATE TABLE IF NOT EXISTS "SavedCart" ("id" TEXT PRIMARY KEY, "items" JSONB NOT NULL, "customerId" TEXT, "discount" DOUBLE PRECISION NOT NULL, "createdAt" BIGINT NOT NULL)`,
+      `CREATE TABLE IF NOT EXISTS "AppSettings" ("id" TEXT PRIMARY KEY, "storeName" TEXT NOT NULL, "tagline" TEXT NOT NULL, "currency" TEXT NOT NULL, "taxRate" DOUBLE PRECISION NOT NULL, "receiptFooter" TEXT NOT NULL, "aiEnabled" BOOLEAN NOT NULL, "browserModel" TEXT NOT NULL, "kbEnabled" BOOLEAN NOT NULL, "skillsEnabled" BOOLEAN NOT NULL, "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
+    ]
+    for (const sql of ddl) {
+      try { await prisma.$executeRawUnsafe(sql) } catch {}
+    }
     await ensureDefaultUser()
     await migrateFromStoreStateIfNeeded()
   } catch (e) {
