@@ -1,6 +1,5 @@
-// Prisma schema for MEPoS dynamic server
-// Free plan: use Neon Postgres (free 0.5GB) — set DATABASE_URL to Neon connection string
-// Local dev: same Neon URL or local Postgres. For offline demo without DB, server falls back to in-memory + JSON file.
+// Prisma schema for MEPoS dynamic server — proper tables for core data
+// Replaces the legacy single JSONB StoreState row with normalized tables.
 
 generator client {
   provider = "prisma-client-js"
@@ -11,8 +10,8 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Single-row store — holds the entire POS state as JSONB.
-// This keeps the dynamic migration trivial: no per-entity tables, exact shape as zustand persist.
+// Legacy single-row JSONB store — kept for migration from older deployments.
+// New deployments write to normalized tables; reads prefer tables if they have data.
 model StoreState {
   id        String   @id @default("singleton")
   data      Json
@@ -24,4 +23,155 @@ model User {
   username     String   @unique
   passwordHash String
   createdAt    DateTime @default(now())
+}
+
+model Category {
+  id    String @id
+  name  String
+  color String
+
+  products Product[]
+}
+
+model Product {
+  id                String   @id
+  sku               String
+  name              String
+  description       String
+  categoryId        String?
+  grade             String
+  price             Float
+  cost              Float
+  buyPrice          Float?
+  exchangePrice     Float?
+  requiresSerial    Boolean  @default(false)
+  stock             Int
+  lowStockThreshold Int
+  image             String
+  createdAt         BigInt
+
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@index([categoryId])
+}
+
+model Customer {
+  id        String   @id
+  name      String
+  phone     String
+  email     String
+  balance   Float
+  notes     String
+  createdAt BigInt
+
+  sales     Sale[]       @relation("CustomerSales")
+  vouchers  GiftVoucher[]
+}
+
+model Sale {
+  id            String   @id
+  receiptNo     String   @unique
+  subtotal      Float
+  discount      Float
+  taxRate       Float
+  taxAmount     Float
+  total         Float
+  kind          String
+  paymentMethod String
+  payments      Json?
+  serials       Json?
+  customerId    String?
+  tillId        String?
+  cashReceived  Float?
+  changeDue     Float?
+  refundedAt    BigInt?
+  originalSaleId String?
+  createdAt     BigInt
+
+  customer Customer? @relation("CustomerSales", fields: [customerId], references: [id])
+  items    SaleItem[]
+
+  @@index([customerId])
+  @@index([tillId])
+  @@index([createdAt])
+}
+
+model SaleItem {
+  id        String @id @default(cuid())
+  saleId    String
+  productId String
+  name      String
+  price     Float
+  qty       Int
+
+  sale Sale @relation(fields: [saleId], references: [id], onDelete: Cascade)
+
+  @@index([saleId])
+  @@index([productId])
+}
+
+model GiftVoucher {
+  id         String @id
+  code       String @unique
+  amount     Float
+  balance    Float
+  customerId String?
+  createdAt  BigInt
+
+  customer Customer? @relation(fields: [customerId], references: [id])
+
+  @@index([customerId])
+}
+
+model KnowledgeDoc {
+  id        String @id
+  title     String
+  content   String
+  updatedAt BigInt
+}
+
+model AiSkill {
+  id        String @id
+  title     String
+  enabled   Boolean
+  content   String
+  updatedAt BigInt
+}
+
+model Till {
+  id             String  @id
+  name           String
+  status         String
+  openedAt       BigInt?
+  openedBy       String?
+  openingFloat   Float
+  closedAt       BigInt?
+  closedBy       String?
+  expectedCash   Float?
+  countedCash    Float?
+  variance       Float?
+  shortageReason String?
+  managerTag     String?
+}
+
+model SavedCart {
+  id         String @id
+  items      Json
+  customerId String?
+  discount   Float
+  createdAt  BigInt
+}
+
+model AppSettings {
+  id            String @id @default("singleton")
+  storeName     String
+  tagline       String
+  currency      String
+  taxRate       Float
+  receiptFooter String
+  aiEnabled     Boolean
+  browserModel  String
+  kbEnabled     Boolean
+  skillsEnabled Boolean
+  updatedAt     DateTime @updatedAt
 }
