@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { persist } from 'zustand/middleware'
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 interface AuthState {
   token: string | null
@@ -16,9 +16,19 @@ export const useAuthStore = create<AuthState>()(
       setAuth: (token, username) => set({ token, username }),
       logout: () => set({ token: null, username: null }),
     }),
-    { name: 'mepos-auth' }
+    {
+      name: 'mepos-auth',
+      storage: createJSONStorage(() => sessionStorage),
+    }
   )
 )
+
+// Clear any legacy localStorage token (previous persist used localStorage) — force re-login
+if (typeof window !== 'undefined') {
+  try {
+    if (localStorage.getItem('mepos-auth')) localStorage.removeItem('mepos-auth')
+  } catch {}
+}
 
 export function authHeaders(): Record<string, string> {
   const token = useAuthStore.getState().token
