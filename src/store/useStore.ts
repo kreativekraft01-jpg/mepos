@@ -44,13 +44,13 @@ interface POSState {
   addTill: (name: string) => void
   deleteTill: (id: string) => void
   setActiveTill: (id?: string) => void
-  addProduct: (p: Omit<Product, 'id' | 'createdAt'>) => void
+  addProduct: (p: Omit<Product, 'id' | 'createdAt'>) => Product
   updateProduct: (id: string, patch: Partial<Product>) => void
   deleteProduct: (id: string) => void
   addCategory: (name: string, color: string) => void
   updateCategory: (id: string, patch: Partial<Category>) => void
   deleteCategory: (id: string) => void
-  addCustomer: (c: Omit<Customer, 'id' | 'createdAt'>) => void
+  addCustomer: (c: Omit<Customer, 'id' | 'createdAt'>) => Customer
   updateCustomer: (id: string, patch: Partial<Customer>) => void
   deleteCustomer: (id: string) => void
   addKnowledgeDoc: (title: string, content: string) => void
@@ -99,6 +99,19 @@ function refreshSeed(state: POSState) {
 /** Today's sales-floor figures for the MEPoS home page. */
 export function selectTodaysFigures(sales: Sale[]) {
   return transactionFigures(todaysTransactions(sales))
+}
+
+/**
+ * Next receipt number must be based on the highest existing number, not the
+ * array length — deleted/imported sales would otherwise collide with an
+ * existing receiptNo and make the whole server save fail on a unique index.
+ */
+export function nextReceiptNo(sales: Sale[]): string {
+  const highest = sales.reduce((max, sale) => {
+    const n = Number.parseInt(String(sale.receiptNo ?? ''), 10)
+    return Number.isFinite(n) ? Math.max(max, n) : max
+  }, 1000)
+  return String(highest + 1)
 }
 
 export const useStore = create<POSState>()(
@@ -202,20 +215,18 @@ export const useStore = create<POSState>()(
 
       setActiveTill: (id) => set({ activeTillId: id }),
 
-      addProduct: (p) =>
-        set((st) => ({
-          products: [
-            {
-              ...p,
-              id: uid(),
-              createdAt: Date.now(),
-              buyPrice: p.buyPrice ?? Math.round((p.cost ?? 0) * 0.9 * 100) / 100,
-              exchangePrice: p.exchangePrice ?? Math.round(p.price * 0.85 * 100) / 100,
-              requiresSerial: p.requiresSerial ?? false
-            },
-            ...st.products
-          ]
-        })),
+      addProduct: (p) => {
+        const product: Product = {
+          ...p,
+          id: uid(),
+          createdAt: Date.now(),
+          buyPrice: p.buyPrice ?? Math.round((p.cost ?? 0) * 0.9 * 100) / 100,
+          exchangePrice: p.exchangePrice ?? Math.round(p.price * 0.85 * 100) / 100,
+          requiresSerial: p.requiresSerial ?? false
+        }
+        set((st) => ({ products: [product, ...st.products] }))
+        return product
+      },
 
       updateProduct: (id, patch) =>
         set((st) => ({
@@ -243,8 +254,11 @@ export const useStore = create<POSState>()(
           )
         })),
 
-      addCustomer: (c) =>
-        set((st) => ({ customers: [...st.customers, { ...c, id: uid(), createdAt: Date.now() }] })),
+      addCustomer: (c) => {
+        const customer: Customer = { ...c, id: uid(), createdAt: Date.now() }
+        set((st) => ({ customers: [...st.customers, customer] }))
+        return customer
+      },
 
       updateCustomer: (id, patch) =>
         set((st) => ({ customers: st.customers.map((c) => (c.id === id ? { ...c, ...patch } : c)) })),
@@ -252,10 +266,11 @@ export const useStore = create<POSState>()(
       deleteCustomer: (id) =>
         set((st) => ({ customers: st.customers.filter((c) => c.id !== id) })),
 
-      addKnowledgeDoc: (title, content) =>
-        set((st) => ({
-          knowledge: [{ id: uid(), title, content, updatedAt: Date.now() }, ...st.knowledge]
-        })),
+      addKnowledgeDoc: (title, content) => {
+        const doc: KnowledgeDoc = { id: uid(), title, content, updatedAt: Date.now() }
+        set((st) => ({ knowledge: [doc, ...st.knowledge] }))
+        return doc
+      },
 
       updateKnowledgeDoc: (id, patch) =>
         set((st) => ({
@@ -458,10 +473,9 @@ export const useStore = create<POSState>()(
             ? Math.round((cashReceived - owed) * 100) / 100
             : undefined
 
-        const receiptCount = st.sales.length + 1
         const sale: Sale = {
           id: uid(),
-          receiptNo: String(1000 + receiptCount),
+          receiptNo: nextReceiptNo(st.sales),
           items: st.cart.map((c) => ({
             productId: c.productId,
             name: c.name,
@@ -537,7 +551,7 @@ export const useStore = create<POSState>()(
 
         const sale: Sale = {
           id: uid(),
-          receiptNo: String(1000 + st.sales.length + 1),
+          receiptNo: nextReceiptNo(st.sales),
           items: items.map((c) => ({ productId: c.productId, name: c.name, price: c.price, qty: c.qty })),
           subtotal: refundTotal,
           discount: 0,

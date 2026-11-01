@@ -6,6 +6,7 @@ import { BROWSER_MODELS, browserModelLabel, isWebGpuSupported, normalizeModelId 
 import { formatDate } from '../utils/format'
 import { parseSkill } from '../utils/skills'
 import { downloadBackup, restoreFromFile } from '../utils/backup'
+import { parseKnowledgeFile } from '../utils/knowledgeFile'
 import type { KnowledgeDoc, AiSkill } from '../types'
 import Modal from '../components/Modal'
 import ConfirmDialog from '../components/ConfirmDialog'
@@ -402,7 +403,40 @@ function KnowledgeBaseCard({
 }) {
   const knowledge = useStore((s) => s.knowledge)
   const updateSettings = useStore((s) => s.updateSettings)
+  const addKnowledgeDoc = useStore((s) => s.addKnowledgeDoc)
+  const pushToast = useStore((s) => s.pushToast)
   const totalWords = knowledge.reduce((n, d) => n + d.content.split(/\s+/).filter(Boolean).length, 0)
+  const importRef = useRef<HTMLInputElement>(null)
+
+  const onImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    e.target.value = ''
+    if (!files.length) return
+    let added = 0
+    const problems: string[] = []
+    for (const file of files) {
+      if (file.size > 5 * 1024 * 1024) {
+        problems.push(`${file.name} is larger than 5 MB`)
+        continue
+      }
+      try {
+        const docs = parseKnowledgeFile(file.name, await file.text())
+        if (!docs.length) {
+          problems.push(`${file.name} had no readable text`)
+          continue
+        }
+        // Newest first, matching manual document creation.
+        for (const doc of docs) addKnowledgeDoc(doc.title, doc.content)
+        added += docs.length
+      } catch (error) {
+        problems.push(`${file.name}: ${(error as Error).message}`)
+      }
+    }
+    if (added) {
+      pushToast('success', `Imported ${added} document${added === 1 ? '' : 's'} — available to Agent X`)
+    }
+    if (problems.length) pushToast('error', problems.join(' · '))
+  }
 
   return (
     <div className="card">
@@ -428,14 +462,29 @@ function KnowledgeBaseCard({
           Add store policies, procedures and FAQs. Ask Agent X about your saved documents. It retrieves relevant content locally and uses it to answer with sources. Changes apply to new replies immediately. Store data stays on this device.
         </p>
 
-        <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
           <button className="btn btn-primary btn-sm" onClick={onAdd}>
             <Plus size={14} /> Add document
+          </button>
+          <button className="btn btn-ghost btn-sm" onClick={() => importRef.current?.click()}>
+            <Upload size={14} /> Import file
           </button>
           <button className="btn btn-ghost btn-sm" onClick={onExport}>
             <Download size={14} /> Export (.md)
           </button>
+          <input
+            ref={importRef}
+            type="file"
+            multiple
+            hidden
+            accept=".txt,.md,.markdown,.json,.csv,.log,.html,.htm,text/plain,text/markdown,text/csv,application/json,text/html"
+            onChange={onImport}
+          />
         </div>
+        <p style={{ fontSize: 12, color: 'var(--text-faint)', marginTop: -6, marginBottom: 16 }}>
+          Import <b>.md</b>, <b>.txt</b>, <b>.csv</b>, <b>.html</b> or a JSON backup containing knowledge docs.
+          Markdown headings become separate documents. Files are read in this browser.
+        </p>
 
         <div className="simple-list" style={{ border: '1px solid var(--border)', borderRadius: 12 }}>
           {knowledge.length === 0 && (

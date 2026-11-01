@@ -1,7 +1,8 @@
-import { useMemo } from 'react'
+import { useMemo, useSyncExternalStore } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { LogOut } from 'lucide-react'
 import { useAuthStore } from '../store/authStore'
+import { getSyncStatus, subscribeSyncStatus } from '../utils/serverSync'
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -54,6 +55,17 @@ export default function Layout() {
   const lowStockCount = useStore((s) => s.products.filter((p) => p.stock <= p.lowStockThreshold).length)
   const location = useLocation()
   const navigate = useNavigate()
+  const syncStatus = useSyncExternalStore(subscribeSyncStatus, getSyncStatus)
+  const syncBadge =
+    syncStatus === 'synced'
+      ? { label: 'Saved to server', className: 'badge-green', title: 'All changes are saved in Postgres' }
+      : syncStatus === 'syncing'
+        ? { label: 'Saving…', className: 'badge-amber', title: 'Sending changes to the server' }
+        : syncStatus === 'offline'
+          ? { label: 'Offline', className: 'badge-amber', title: 'Server unreachable — changes are kept on this device and retried' }
+          : syncStatus === 'error'
+            ? { label: 'Retrying save', className: 'badge-red', title: 'The last save failed — retrying automatically' }
+            : { label: 'Local only', className: '', title: 'Sign in to persist changes to the server' }
 
   const title = useMemo(() => {
     const map: Record<string, [string, string]> = {
@@ -127,6 +139,9 @@ export default function Layout() {
             <p>{title[1]}</p>
           </div>
           <div className="topbar-actions">
+            <span className={`badge ${syncBadge.className}`} title={syncBadge.title}>
+              {syncBadge.label}
+            </span>
             <button className="btn btn-primary" onClick={() => navigate('/')}>
               <ShoppingCart size={16} />
               Open MEPoS

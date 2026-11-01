@@ -311,7 +311,7 @@ export default function App() {
   const handleCustomerSignup = (formData: any) => {
     const name = `${formData.firstName} ${formData.lastName}`.trim();
     const isEmail = (formData.contactInfo || '').includes('@');
-    store.addCustomer({
+    const created = store.addCustomer({
       name: name || 'New Customer',
       email: isEmail ? formData.contactInfo : '',
       phone: !isEmail ? formData.contactInfo : '',
@@ -319,7 +319,6 @@ export default function App() {
       notes: ''
     });
     setShowNewCustomerModal(false);
-    const created = useStore.getState().customers.find((c) => c.name === name);
     if (created) {
       setViewingCustomer(toCustomerResult(created));
       setPreviousPage(currentPage === 'gift-voucher' ? 'gift-voucher' : 'home');

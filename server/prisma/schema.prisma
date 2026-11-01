@@ -173,5 +173,6 @@ model AppSettings {
   browserModel  String
   kbEnabled     Boolean
   skillsEnabled Boolean
+  activeTillId  String?
   updatedAt     DateTime @updatedAt
 }

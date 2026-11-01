@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url'
 import fs from 'fs'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { normalizeState, toTableRows } from './state.js'
 
 const app = express()
 const PORT = Number(process.env.PORT || 3000)
@@ -51,11 +52,13 @@ async function initPrisma() {
       `CREATE TABLE IF NOT EXISTS "AiSkill" ("id" TEXT PRIMARY KEY, "title" TEXT NOT NULL, "enabled" BOOLEAN NOT NULL, "content" TEXT NOT NULL, "updatedAt" BIGINT NOT NULL)`,
       `CREATE TABLE IF NOT EXISTS "Till" ("id" TEXT PRIMARY KEY, "name" TEXT NOT NULL, "status" TEXT NOT NULL, "openedAt" BIGINT, "openedBy" TEXT, "openingFloat" DOUBLE PRECISION NOT NULL, "closedAt" BIGINT, "closedBy" TEXT, "expectedCash" DOUBLE PRECISION, "countedCash" DOUBLE PRECISION, "variance" DOUBLE PRECISION, "shortageReason" TEXT, "managerTag" TEXT)`,
       `CREATE TABLE IF NOT EXISTS "SavedCart" ("id" TEXT PRIMARY KEY, "items" JSONB NOT NULL, "customerId" TEXT, "discount" DOUBLE PRECISION NOT NULL, "createdAt" BIGINT NOT NULL)`,
-      `CREATE TABLE IF NOT EXISTS "AppSettings" ("id" TEXT PRIMARY KEY, "storeName" TEXT NOT NULL, "tagline" TEXT NOT NULL, "currency" TEXT NOT NULL, "taxRate" DOUBLE PRECISION NOT NULL, "receiptFooter" TEXT NOT NULL, "aiEnabled" BOOLEAN NOT NULL, "browserModel" TEXT NOT NULL, "kbEnabled" BOOLEAN NOT NULL, "skillsEnabled" BOOLEAN NOT NULL, "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
+      `CREATE TABLE IF NOT EXISTS "AppSettings" ("id" TEXT PRIMARY KEY, "storeName" TEXT NOT NULL, "tagline" TEXT NOT NULL, "currency" TEXT NOT NULL, "taxRate" DOUBLE PRECISION NOT NULL, "receiptFooter" TEXT NOT NULL, "aiEnabled" BOOLEAN NOT NULL, "browserModel" TEXT NOT NULL, "kbEnabled" BOOLEAN NOT NULL, "skillsEnabled" BOOLEAN NOT NULL, "activeTillId" TEXT, "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP)`,
     ]
     for (const sql of ddl) {
       try { await prisma.$executeRawUnsafe(sql) } catch {}
     }
+    // Existing Neon databases predate the activeTillId column — add it in place.
+    try { await prisma.$executeRawUnsafe(`ALTER TABLE "AppSettings" ADD COLUMN IF NOT EXISTS "activeTillId" TEXT`) } catch {}
     await ensureDefaultUser()
     await migrateFromStoreStateIfNeeded()
   } catch (e) {
@@ -175,6 +178,7 @@ async function readStateFromTables(): Promise<Record<string, unknown> | null> {
           skillsEnabled: (settingsRow as Record<string, unknown>).skillsEnabled,
         }
       : undefined,
+    activeTillId: (settingsRow as Record<string, unknown> | null)?.activeTillId ?? undefined,
   }
   } catch {
     return null
@@ -183,19 +187,13 @@ async function readStateFromTables(): Promise<Record<string, unknown> | null> {
 
 async function writeStateToTables(data: Record<string, unknown>): Promise<void> {
   if (!usePrisma || !prisma) return
-  const categories = (data.categories as Record<string, unknown>[]) || []
-  const products = (data.products as Record<string, unknown>[]) || []
-  const customers = (data.customers as Record<string, unknown>[]) || []
-  const sales = (data.sales as Record<string, unknown>[]) || []
-  const vouchers = (data.vouchers as Record<string, unknown>[]) || []
-  const knowledge = (data.knowledge as Record<string, unknown>[]) || []
-  const skills = (data.skills as Record<string, unknown>[]) || []
-  const tills = (data.tills as Record<string, unknown>[]) || []
-  const savedCarts = (data.savedCarts as Record<string, unknown>[]) || []
-  const settings = data.settings as Record<string, unknown> | undefined
+  // Normalise first: unknown client fields and dangling customer/category
+  // references would otherwise fail the whole Prisma batch and lose the save.
+  const state = normalizeState(data)
+  const rows = toTableRows(state)
 
-  // Use transaction to replace all data
-  await prisma.$transaction(async (tx: Record<string, { deleteMany: (arg: unknown) => Promise<unknown>; createMany: (arg: unknown) => Promise<unknown>; upsert: (arg: unknown) => Promise<unknown>; create: (arg: unknown) => Promise<unknown> }>) => {
+  // Replace all data atomically so a failed save never leaves a half-written store.
+  await prisma.$transaction(async (tx: Record<string, any>) => {
     await tx.saleItem.deleteMany({})
     await tx.sale.deleteMany({})
     await tx.savedCart.deleteMany({})
@@ -208,67 +206,29 @@ async function writeStateToTables(data: Record<string, unknown>): Promise<void> 
     await tx.aiSkill.deleteMany({})
     await tx.till.deleteMany({})
 
-    if (categories.length) await tx.category.createMany({ data: categories as never })
-    if (products.length) {
-      const mapped = products.map((p) => ({
-        ...p,
-        categoryId: (p.categoryId as string) || null,
-        createdAt: BigInt(p.createdAt as number),
-      }))
-      await tx.product.createMany({ data: mapped as never })
+    if (rows.categories.length) await tx.category.createMany({ data: rows.categories })
+    if (rows.products.length) await tx.product.createMany({ data: rows.products })
+    if (rows.customers.length) await tx.customer.createMany({ data: rows.customers })
+    for (const { items, ...sale } of rows.sales) {
+      await tx.sale.create({ data: { ...sale, items: { create: items } } })
     }
-    if (customers.length) {
-      const mapped = customers.map((c) => ({ ...c, createdAt: BigInt(c.createdAt as number) }))
-      await tx.customer.createMany({ data: mapped as never })
-    }
-    for (const s of sales) {
-      const { items, ...saleData } = s as { items: Record<string, unknown>[] } & Record<string, unknown>
-      await tx.sale.create({
-        data: {
-          ...(saleData as unknown as Record<string, unknown>),
-          createdAt: BigInt(saleData.createdAt as number),
-          refundedAt: saleData.refundedAt != null ? BigInt(saleData.refundedAt as number) : null,
-          payments: saleData.payments ?? undefined,
-          serials: saleData.serials ?? undefined,
-          items: { create: (items || []).map((it) => ({ productId: it.productId, name: it.name, price: it.price, qty: it.qty })) },
-        },
-      })
-    }
-    if (vouchers.length) {
-      const mapped = vouchers.map((v) => ({ ...v, createdAt: BigInt(v.createdAt as number) }))
-      await tx.giftVoucher.createMany({ data: mapped as never })
-    }
-    if (knowledge.length) {
-      const mapped = knowledge.map((k) => ({ ...k, updatedAt: BigInt(k.updatedAt as number) }))
-      await tx.knowledgeDoc.createMany({ data: mapped as never })
-    }
-    if (skills.length) {
-      const mapped = skills.map((sk) => ({ ...sk, updatedAt: BigInt(sk.updatedAt as number) }))
-      await tx.aiSkill.createMany({ data: mapped as never })
-    }
-    if (tills.length) {
-      const mapped = tills.map((t) => ({
-        ...t,
-        openedAt: t.openedAt != null ? BigInt(t.openedAt as number) : null,
-        closedAt: t.closedAt != null ? BigInt(t.closedAt as number) : null,
-      }))
-      await tx.till.createMany({ data: mapped as never })
-    }
-    if (savedCarts.length) {
-      const mapped = savedCarts.map((sc) => ({ ...sc, createdAt: BigInt(sc.createdAt as number) }))
-      await tx.savedCart.createMany({ data: mapped as never })
-    }
-    if (settings) {
+    if (rows.vouchers.length) await tx.giftVoucher.createMany({ data: rows.vouchers })
+    if (rows.knowledge.length) await tx.knowledgeDoc.createMany({ data: rows.knowledge })
+    if (rows.skills.length) await tx.aiSkill.createMany({ data: rows.skills })
+    if (rows.tills.length) await tx.till.createMany({ data: rows.tills })
+    if (rows.savedCarts.length) await tx.savedCart.createMany({ data: rows.savedCarts })
+    if (rows.settings) {
       await tx.appSettings.upsert({
         where: { id: 'singleton' },
-        update: settings as never,
-        create: { id: 'singleton', ...(settings as unknown as Record<string, unknown>) },
+        update: rows.settings,
+        create: { id: 'singleton', ...rows.settings },
       })
     }
   })
+
   // Keep legacy StoreState in sync for rollback
   try {
-    await prisma.storeState.upsert({ where: { id: 'singleton' }, update: { data }, create: { id: 'singleton', data } })
+    await prisma.storeState.upsert({ where: { id: 'singleton' }, update: { data: state }, create: { id: 'singleton', data: state } })
   } catch {}
 }
 
@@ -347,17 +307,25 @@ app.get('/api/state', authMiddleware, async (_req, res) => {
 
 app.put('/api/state', authMiddleware, async (req, res) => {
   const data = req.body
-  if (!data || typeof data !== 'object') return res.status(400).json({ error: 'Invalid body' })
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return res.status(400).json({ error: 'Invalid body' })
+  const state = normalizeState(data)
+  const counts = {
+    categories: state.categories.length,
+    products: state.products.length,
+    customers: state.customers.length,
+    sales: state.sales.length,
+    knowledge: state.knowledge.length,
+  }
   try {
     if (usePrisma && prisma) {
       await writeStateToTables(data as Record<string, unknown>)
-      return res.json({ ok: true })
+      return res.json({ ok: true, mode: 'postgres', counts })
     }
-    saveFallback(data)
-    return res.json({ ok: true, mode: 'fallback' })
+    saveFallback(state)
+    return res.json({ ok: true, mode: 'fallback', counts })
   } catch (e) {
-    console.error(e)
-    res.status(500).json({ error: 'Failed to save state' })
+    console.error('[server] Failed to save state:', e)
+    res.status(500).json({ error: 'Failed to save state', detail: (e as Error).message })
   }
 })
 
