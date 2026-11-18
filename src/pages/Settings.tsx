@@ -106,13 +106,14 @@ export default function SettingsPage() {
         onExport={exportKnowledge}
       />
 
-      <SkillsCard
+      {/* Temporarily hidden from Admin settings. */}
+      {false && <SkillsCard
         form={form}
         set={set}
         onAdd={() => setSkillModal('new')}
         onEdit={(s) => setSkillModal(s)}
         onDelete={(s) => setDeletingSkill(s)}
-      />
+      />}
 
       <div className="card">
         <div className="card-header">

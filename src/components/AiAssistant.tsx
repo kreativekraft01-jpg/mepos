@@ -25,7 +25,7 @@ import {
 } from '../utils/pipeline'
 import { browserModelLabel } from '../utils/browserLlm'
 
-const SUGGESTIONS = ["Today's sales", 'Low stock', 'Grade A phones under 400', 'Explain cash variance']
+const SUGGESTIONS = ["Today's sales", 'Grade A phones under 400', 'Do we have Tom Holland movies in stock?']
 
 export default function AiAssistant() {
   const enabled = useStore((s) => s.settings.aiEnabled)
@@ -107,6 +107,12 @@ function AssistantPanel({
   )
 
   const modelId = settings.browserModel
+
+  useEffect(() => {
+    if (ai.status === 'idle' || (ai.status === 'ready' && ai.modelId !== modelId)) {
+      void ai.startLoad(modelId)
+    }
+  }, [ai.status, ai.modelId, ai.startLoad, modelId])
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: messages.length || typing ? scrollRef.current.scrollHeight : 0, behavior: 'smooth' })
@@ -302,10 +308,9 @@ function AssistantPanel({
         </div>
       )}
 
-      {(ai.status === 'idle' || ai.status === 'error' || (ai.status === 'ready' && !ready)) && (
+      {ai.status === 'error' && (
         <div className="ai-model-choice">
-          <span>Store lookups are ready. Optional AI loads {browserModelLabel(modelId)} on this device.</span>
-          <button onClick={() => ai.startLoad(modelId)}>Load local AI</button>
+          <span>Local AI could not load. Store lookups are still available. Use the reload icon to retry.</span>
         </div>
       )}
       <div className="ai-messages" ref={scrollRef} role="log" aria-live="polite">
