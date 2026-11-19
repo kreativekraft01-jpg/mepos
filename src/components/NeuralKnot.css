@@ -1,0 +1,48 @@
+.neural-knot {
+  --flow-speed: 2.6s;
+  --pulse-speed: 2.6s;
+  --stream-w: 7.5;
+  display: block;
+  flex: none;
+}
+button:hover .neural-knot, button:focus-visible .neural-knot,
+.neural-knot[data-state="thinking"] {
+  --flow-speed: 1.3s;
+  --pulse-speed: 1.3s;
+  --stream-w: 9.2;
+}
+.neural-knot[data-state="answering"] { --flow-speed: 1.8s; }
+.neural-knot[data-state="error"] .nk-core { fill: #fb7185; }
+  .neural-knot .nk-packet {
+    fill: none; stroke-linecap: round;
+    stroke-dasharray: 64 176; stroke-dashoffset: 240;
+    stroke-width: var(--stream-w);
+    animation: neural-knot-flow var(--flow-speed) cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  .neural-knot .nk-hot {
+    fill: none; stroke: #FFFFFF; stroke-linecap: round;
+    stroke-dasharray: 12 228; stroke-dashoffset: 240;
+    stroke-width: calc(var(--stream-w) * 0.58);
+    animation: neural-knot-flow var(--flow-speed) cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+  .neural-knot .nk-p2 { animation-delay: calc(var(--flow-speed) * -0.25); }
+  .neural-knot .nk-p3 { animation-delay: calc(var(--flow-speed) * -0.50); }
+  .neural-knot .nk-p4 { animation-delay: calc(var(--flow-speed) * -0.75); }
+  .neural-knot .nk-core {
+    transform-origin: 120px 120px;
+    animation: neural-knot-core var(--pulse-speed) ease-in-out infinite;
+  }
+  @keyframes neural-knot-flow { to { stroke-dashoffset: 0; } }
+  @keyframes neural-knot-core {
+    0%, 100% { transform: scale(0.82); opacity: 0.78; }
+    50% { transform: scale(1.18); opacity: 1; }
+  }
+
+.neural-knot[data-size="small"] .nk-packet,
+.neural-knot[data-size="small"] .nk-hot,
+.neural-knot[data-size="small"] .nk-core { animation-play-state: paused; }
+@media (prefers-reduced-motion: reduce) {
+  .neural-knot .nk-packet, .neural-knot .nk-hot, .neural-knot .nk-core {
+    animation-play-state: paused;
+  }
+}
