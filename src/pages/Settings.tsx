@@ -460,7 +460,7 @@ function KnowledgeBaseCard({
           <span>Use the knowledge base when answering</span>
         </label>
         <p style={{ fontSize: 12.5, color: 'var(--text-faint)', marginBottom: 16 }}>
-          Add store policies, procedures and FAQs. Ask Agent X about your saved documents. It retrieves relevant content locally and uses it to answer with sources. Changes apply to new replies immediately. Store data stays on this device.
+          Add store policies, procedures and FAQs. Ask SmartMate about your saved documents. It retrieves relevant content locally and uses it to answer with sources. Changes apply to new replies immediately. Store data stays on this device.
         </p>
 
         <div style={{ display: 'flex', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
