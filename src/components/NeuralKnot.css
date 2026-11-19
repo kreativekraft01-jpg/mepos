@@ -1,7 +1,7 @@
 .neural-knot {
   --flow-speed: 2.6s;
   --pulse-speed: 2.6s;
-  --stream-w: 7.5;
+  --stream-w: 9;
   display: block;
   flex: none;
 }
@@ -28,7 +28,7 @@ button:hover .neural-knot, button:focus-visible .neural-knot,
 .neural-knot[data-state="thinking"] {
   --flow-speed: 1.3s;
   --pulse-speed: 1.3s;
-  --stream-w: 9.2;
+  --stream-w: 11;
 }
 .neural-knot[data-state="answering"] { --flow-speed: 1.8s; }
 .neural-knot[data-state="error"] .nk-core { fill: #fb7185; }
