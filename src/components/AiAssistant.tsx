@@ -366,7 +366,7 @@ function AssistantPanel({
         <textarea
           ref={inputRef}
           rows={2}
-          aria-label="Message Agent X"
+          aria-label="Message SmartMate"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); send() } }}
