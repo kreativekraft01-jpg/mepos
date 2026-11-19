@@ -282,7 +282,7 @@ function AssistantPanel({
           <AgentX size={48} state={agentState} />
         </div>
         <div style={{ flex: 1 }}>
-          <h3>Agent X <span className="ax-header-tag">ASSISTANT</span></h3>
+          <h3>SmartMate <span className="ax-header-tag">ASSISTANT</span></h3>
           <p title={statusLine.text} style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
             <span className={`ax-status-dot ${typing ? 'is-active' : ''}`} /> {typing ? (phase === 'composing' ? 'Writing a response' : phase === 'checking' ? 'Checking sources' : 'Finding relevant context') : ready ? 'Local AI ready' : ai.status === 'loading' ? 'Loading local AI…' : 'Store knowledge ready'}
           </p>
