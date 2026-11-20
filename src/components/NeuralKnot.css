@@ -6,7 +6,7 @@
   flex: none;
 }
 /* A continuous gradient rim keeps the knot readable between plasma pulses. */
-.neural-knot use[stroke*="-rim"] { stroke-width: 36; }
+.neural-knot use[stroke*="-rim"] { stroke-width: 30; }
 .neural-knot > g[stroke="#080D18"] {
   stroke: #28455c;
   stroke-width: 16;
