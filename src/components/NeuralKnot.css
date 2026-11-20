@@ -1,7 +1,7 @@
 .neural-knot {
   --flow-speed: 2.6s;
   --pulse-speed: 2.6s;
-  --stream-w: 8;
+  --stream-w: 7.5;
   display: block;
   flex: none;
 }
